@@ -10,8 +10,13 @@ export default defineConfig({
   },
   define: {
     global: 'globalThis',
-    'process.env': {},
-    'process.version': JSON.stringify('v18.0.0')
+    process: JSON.stringify({
+      env: {},
+      version: 'v18.0.0',
+      browser: true,
+      platform: 'browser',
+      nextTick: '(fn) => setTimeout(fn, 0)'
+    })
   },
   resolve: {
     alias: {
@@ -22,6 +27,6 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['buffer', 'crypto-browserify', 'stream-browserify', 'util']
+    include: ['buffer', 'crypto-browserify', 'stream-browserify', 'util', 'arweave']
   }
 })
