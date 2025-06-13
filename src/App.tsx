@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react'
+import { ArdriveClient } from './ardrive'
 
 interface UploadState {
   isUploading: boolean
@@ -11,6 +12,7 @@ interface UploadState {
 const App: React.FC = () => {
   const [isInitialized, setIsInitialized] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [balance, setBalance] = useState<string>('0')
   const [uploadState, setUploadState] = useState<UploadState>({
     isUploading: false,
     progress: 0,
@@ -21,15 +23,22 @@ const App: React.FC = () => {
   
   const fileInputRef = useRef<HTMLInputElement>(null)
   const walletInputRef = useRef<HTMLInputElement>(null)
+  const ardriveClient = useRef<ArdriveClient>(new ArdriveClient())
 
   const handleWalletUpload = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
 
     try {
-      // 簡単なテスト用の初期化
-      setIsInitialized(true)
-      setUploadState(prev => ({ ...prev, success: 'ウォレットが正常に読み込まれました（テスト）', error: null }))
+      const success = await ardriveClient.current.initialize({ walletFile: file })
+      if (success) {
+        setIsInitialized(true)
+        const walletBalance = await ardriveClient.current.getBalance()
+        setBalance(walletBalance)
+        setUploadState(prev => ({ ...prev, success: 'ウォレットが正常に読み込まれました', error: null }))
+      } else {
+        setUploadState(prev => ({ ...prev, error: 'ウォレットの初期化に失敗しました', success: null }))
+      }
     } catch (error) {
       setUploadState(prev => ({ ...prev, error: `ウォレットエラー: ${error}`, success: null }))
     }
@@ -64,22 +73,35 @@ const App: React.FC = () => {
 
     setUploadState(prev => ({ ...prev, isUploading: true, progress: 0, error: null, success: null, txId: null }))
 
-    // シミュレーション用の進捗更新
-    const progressInterval = setInterval(() => {
-      setUploadState(prev => {
-        if (prev.progress >= 100) {
-          clearInterval(progressInterval)
-          return {
-            ...prev,
-            isUploading: false,
-            progress: 100,
-            success: 'ファイルのアップロードが完了しました！（テスト）',
-            txId: 'test-tx-id-' + Date.now(),
-          }
-        }
-        return { ...prev, progress: prev.progress + 10 }
+    try {
+      const txId = await ardriveClient.current.uploadFile(selectedFile, (progress) => {
+        setUploadState(prev => ({ ...prev, progress: Math.round(progress) }))
       })
-    }, 200)
+
+      if (txId) {
+        setUploadState(prev => ({
+          ...prev,
+          isUploading: false,
+          progress: 100,
+          success: 'ファイルのアップロードが完了しました！',
+          txId,
+        }))
+        const newBalance = await ardriveClient.current.getBalance()
+        setBalance(newBalance)
+      } else {
+        setUploadState(prev => ({
+          ...prev,
+          isUploading: false,
+          error: 'アップロードに失敗しました',
+        }))
+      }
+    } catch (error) {
+      setUploadState(prev => ({
+        ...prev,
+        isUploading: false,
+        error: `アップロードエラー: ${error}`,
+      }))
+    }
   }, [selectedFile, isInitialized])
 
   const formatFileSize = (bytes: number): string => {
@@ -110,7 +132,7 @@ const App: React.FC = () => {
         <div>
           <div style={{ marginBottom: '2rem' }}>
             <h3>ウォレット情報</h3>
-            <p>残高: テスト中 winston</p>
+            <p>残高: {balance} winston</p>
           </div>
 
           <div
@@ -149,7 +171,7 @@ const App: React.FC = () => {
               onClick={handleUpload}
               disabled={uploadState.isUploading}
             >
-              アップロード開始（テスト）
+              アップロード開始
             </button>
           )}
 

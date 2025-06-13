@@ -1,4 +1,4 @@
-import { TurboFactory, ArweaveSigner } from '@ardrive/turbo-sdk'
+import { TurboFactory, ArweaveSigner } from '@ardrive/turbo-sdk/web'
 
 export interface ArdriveConfig {
   privateKey?: string
@@ -42,19 +42,25 @@ export class ArdriveClient {
       }
 
       const fileBuffer = await file.arrayBuffer()
-      const dataItem = await this.turbo.uploadFile({
-        fileStreamFactory: () => new Uint8Array(fileBuffer),
+      
+      const uploadResult = await this.turbo.uploadFile({
+        fileStreamFactory: () => new ReadableStream({
+          start(controller) {
+            controller.enqueue(new Uint8Array(fileBuffer))
+            controller.close()
+          }
+        }),
         fileSizeFactory: () => file.size,
         signal: new AbortController().signal,
         dataItemOpts: {
           tags: [
-            { name: 'Content-Type', value: file.type },
+            { name: 'Content-Type', value: file.type || 'application/octet-stream' },
             { name: 'File-Name', value: file.name },
           ],
         },
       })
 
-      return dataItem.id
+      return uploadResult.id
     } catch (error) {
       console.error('Upload failed:', error)
       return null
