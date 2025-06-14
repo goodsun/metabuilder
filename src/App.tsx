@@ -50,11 +50,16 @@ const ArDriveUploader: React.FC = () => {
 
       try {
         console.log("Starting wallet initialization...");
-        const success = await ardriveClient.current.initialize({
+        
+        // ウォレット切り替え時にlocalStorageをクリア（初期化前に実行）
+        localStorage.removeItem("uploadedFiles");
+        ardriveClient.current.clearUploadedFiles();
+        
+        const result = await ardriveClient.current.initialize({
           walletFile: file,
         });
 
-        if (success) {
+        if (result.success) {
           console.log("Wallet initialization successful");
           setIsInitialized(true);
 
@@ -68,12 +73,17 @@ const ArDriveUploader: React.FC = () => {
             setBalance("取得に失敗");
           }
 
-          setUploadedFiles(ardriveClient.current.getUploadedFiles());
+          // 初期化完了時点で履歴同期も完了しているはず
+          const currentFiles = ardriveClient.current.getUploadedFiles();
+          setUploadedFiles(currentFiles);
+          localStorage.setItem("uploadedFiles", JSON.stringify(currentFiles));
           setUploadState((prev) => ({
             ...prev,
-            success: "ウォレットが正常に読み込まれました",
+            success: `ウォレットが正常に読み込まれました（${result.filesCount || 0}件のファイルを取得）`,
             error: null,
           }));
+          
+          console.log("Files loaded after initialization:", currentFiles.length);
         } else {
           console.error("Wallet initialization failed");
           setUploadState((prev) => ({
@@ -190,6 +200,7 @@ const ArDriveUploader: React.FC = () => {
   useEffect(() => {
     if (isInitialized) {
       const files = ardriveClient.current.getUploadedFiles();
+      console.log("useEffect updating files:", files.length);
       setUploadedFiles(files);
       localStorage.setItem("uploadedFiles", JSON.stringify(files));
     }
@@ -308,7 +319,7 @@ const ArDriveUploader: React.FC = () => {
         <div>
           <div style={{ marginBottom: "2rem" }}>
             <h3>ウォレット情報</h3>
-            <p>残高: {balance} winston</p>
+            <p>残高: {Number(balance).toLocaleString()} winston</p>
             <button
               onClick={() => setShowFileList(!showFileList)}
               style={{
@@ -330,9 +341,33 @@ const ArDriveUploader: React.FC = () => {
                 color: "white",
                 border: "none",
                 borderRadius: "4px",
+                marginRight: "1rem",
               }}
             >
               履歴を更新
+            </button>
+            <button
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "すべてのファイル履歴を削除しますか？この操作は元に戻せません。"
+                  )
+                ) {
+                  ardriveClient.current.clearUploadedFiles();
+                  setUploadedFiles([]);
+                  localStorage.removeItem("uploadedFiles");
+                }
+              }}
+              style={{
+                marginTop: "1rem",
+                padding: "0.5rem 1rem",
+                backgroundColor: "#dc3545",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+              }}
+            >
+              一括削除
             </button>
           </div>
 
@@ -345,7 +380,29 @@ const ArDriveUploader: React.FC = () => {
                 borderRadius: "8px",
               }}
             >
-              <h3>アップロード済みファイル</h3>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+                <h3 style={{ margin: 0 }}>アップロード済みファイル</h3>
+                <button
+                  onClick={() => {
+                    const files = ardriveClient.current.getUploadedFiles();
+                    console.log("Force refresh files:", files.length);
+                    setUploadedFiles([...files]);
+                  }}
+                  style={{
+                    padding: "0.25rem 0.5rem",
+                    backgroundColor: "#17a2b8",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    fontSize: "0.75rem",
+                  }}
+                >
+                  リフレッシュ
+                </button>
+              </div>
+              <p style={{ fontSize: "0.8rem", color: "#666", margin: "0 0 1rem 0" }}>
+                デバッグ: {uploadedFiles.length}件のファイル
+              </p>
               {uploadedFiles.length === 0 ? (
                 <p>アップロード済みファイルはありません</p>
               ) : (

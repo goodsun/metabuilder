@@ -49,7 +49,7 @@ export class ArdriveClient {
     this.loadUploadedFiles();
   }
 
-  async initialize(config: ArdriveConfig) {
+  async initialize(config: ArdriveConfig): Promise<{ success: boolean; filesCount?: number }> {
     try {
       if (config.privateKey) {
         console.log("Initializing with private key...");
@@ -84,7 +84,7 @@ export class ArdriveClient {
         try {
           console.log("Syncing upload history...");
           await this.syncUploadHistory();
-          console.log("Upload history synced successfully");
+          console.log("Upload history synced successfully, files count:", this.uploadedFiles.length);
         } catch (historyError) {
           console.warn(
             "Failed to sync upload history (non-critical):",
@@ -95,10 +95,10 @@ export class ArdriveClient {
       }
 
       console.log("ArDrive client initialized successfully");
-      return true;
+      return { success: true, filesCount: this.uploadedFiles.length };
     } catch (error) {
       console.error("Failed to initialize Ardrive client:", error);
-      return false;
+      return { success: false };
     }
   }
 
@@ -265,6 +265,11 @@ export class ArdriveClient {
   deleteUploadedFile(id: string) {
     this.uploadedFiles = this.uploadedFiles.filter((file) => file.id !== id);
     this.saveUploadedFiles();
+  }
+
+  clearUploadedFiles() {
+    this.uploadedFiles = [];
+    localStorage.removeItem("ardrive_uploaded_files");
   }
 
   async getUploadHistoryFromArweave(
