@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { ArdriveClient } from "./ardrive";
 import MetadataCreator from "./components/MetadataCreator";
 import Manual from "./components/Manual";
+import FileHistory from "./components/FileHistory";
 
 interface UploadedFile {
   id: string;
@@ -167,7 +168,9 @@ const ArDriveUploader: React.FC = () => {
         }));
         const newBalance = await ardriveClient.current.getBalance();
         setBalance(newBalance);
-        setUploadedFiles(ardriveClient.current.getUploadedFiles());
+        const files = ardriveClient.current.getUploadedFiles();
+        setUploadedFiles(files);
+        localStorage.setItem("uploadedFiles", JSON.stringify(files));
       } else {
         setUploadState((prev) => ({
           ...prev,
@@ -186,9 +189,23 @@ const ArDriveUploader: React.FC = () => {
 
   useEffect(() => {
     if (isInitialized) {
-      setUploadedFiles(ardriveClient.current.getUploadedFiles());
+      const files = ardriveClient.current.getUploadedFiles();
+      setUploadedFiles(files);
+      localStorage.setItem("uploadedFiles", JSON.stringify(files));
     }
   }, [isInitialized]);
+
+  useEffect(() => {
+    const savedFiles = localStorage.getItem("uploadedFiles");
+    if (savedFiles) {
+      try {
+        const parsedFiles = JSON.parse(savedFiles);
+        setUploadedFiles(parsedFiles);
+      } catch (error) {
+        console.error("Failed to load saved files:", error);
+      }
+    }
+  }, []);
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 Bytes";
@@ -200,7 +217,9 @@ const ArDriveUploader: React.FC = () => {
 
   const handleDeleteFile = useCallback((id: string) => {
     ardriveClient.current.deleteUploadedFile(id);
-    setUploadedFiles(ardriveClient.current.getUploadedFiles());
+    const files = ardriveClient.current.getUploadedFiles();
+    setUploadedFiles(files);
+    localStorage.setItem("uploadedFiles", JSON.stringify(files));
   }, []);
 
   const handleRefreshHistory = useCallback(async () => {
@@ -209,7 +228,9 @@ const ArDriveUploader: React.FC = () => {
     try {
       setUploadState((prev) => ({ ...prev, success: null, error: null }));
       await ardriveClient.current.refreshUploadHistory();
-      setUploadedFiles(ardriveClient.current.getUploadedFiles());
+      const files = ardriveClient.current.getUploadedFiles();
+      setUploadedFiles(files);
+      localStorage.setItem("uploadedFiles", JSON.stringify(files));
       setUploadState((prev) => ({
         ...prev,
         success: "アップロード履歴を更新しました",
@@ -405,7 +426,7 @@ const ArDriveUploader: React.FC = () => {
                             cursor: "pointer",
                           }}
                         >
-                          履歴から削除
+                          削除
                         </button>
                       </div>
                     </div>
@@ -546,7 +567,7 @@ const ArDriveUploader: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Router>
-      <div style={{ minHeight: "100vh", background: "#f5f5f5" }}>
+      <div style={{ minHeight: "100vh", background: "#f5f5f5", width: "100%" }}>
         <nav
           style={{
             background: "white",
@@ -586,6 +607,17 @@ const App: React.FC = () => {
               Metadata Builder
             </Link>
             <Link
+              to="/history"
+              style={{
+                textDecoration: "none",
+                color: "#007bff",
+                fontWeight: "bold",
+                fontSize: "1.1rem",
+              }}
+            >
+              Material Vault
+            </Link>
+            <Link
               to="/manual"
               style={{
                 textDecoration: "none",
@@ -602,8 +634,34 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<ArDriveUploader />} />
           <Route path="/metadata" element={<MetadataCreator />} />
+          <Route path="/history" element={<FileHistory />} />
           <Route path="/manual" element={<Manual />} />
         </Routes>
+
+        <footer
+          style={{
+            marginTop: "20px",
+            padding: "2rem 1rem",
+            textAlign: "center",
+            borderTop: "1px solid #e9ecef",
+            background: "white",
+            color: "#666",
+            fontSize: "0.9rem",
+          }}
+        >
+          <a
+            href={import.meta.env.VITE_FOOTER_LINK || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "#666",
+              textDecoration: "none",
+            }}
+          >
+            {import.meta.env.VITE_FOOTER_DISP ||
+              "© 2024 MetaBuilder. All rights reserved."}
+          </a>
+        </footer>
       </div>
     </Router>
   );

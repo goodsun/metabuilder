@@ -1,5 +1,5 @@
 {
-  "name": "artool",
+  "name": "metabuilder",
   "module": "index.ts",
   "type": "module",
   "private": true,

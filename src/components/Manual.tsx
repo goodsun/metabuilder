@@ -6,7 +6,7 @@ const Manual: React.FC = () => {
       className="container"
       style={{ maxWidth: "900px", margin: "0 auto", padding: "2rem" }}
     >
-      <h1>ArTool 使用マニュアル</h1>
+      <h1>ArDriveTools 使用マニュアル</h1>
 
       <div
         style={{
@@ -16,9 +16,9 @@ const Manual: React.FC = () => {
           marginBottom: "2rem",
         }}
       >
-        <h2>ArToolとは</h2>
+        <h2>ArDriveToolsとは</h2>
         <p>
-          ArToolは、Arweaveブロックチェーンを使用したファイルアップロードとNFTメタデータ作成を統合したWebアプリケーションです。
+          ArDriveToolsは、Arweaveブロックチェーンを使用したファイルアップロードとNFTメタデータ作成を統合したWebアプリケーションです。
         </p>
       </div>
 
@@ -35,7 +35,7 @@ const Manual: React.FC = () => {
           }}
         >
           <strong>必要なもの：</strong>
-          <ul>
+          <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>Arweaveウォレットファイル（JSON形式）</li>
             <li>
               TURBOクレジット（アップロード費用）- クレジットカードで購入可能
@@ -54,7 +54,7 @@ const Manual: React.FC = () => {
           }}
         >
           <h5>1. ArDriveでウォレット作成（推奨）</h5>
-          <ol>
+          <ol style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>
               <a
                 href="https://app.ardrive.io/"
@@ -90,7 +90,7 @@ const Manual: React.FC = () => {
           }}
         >
           <h5>ArDriveでクレジットカード購入：</h5>
-          <ol>
+          <ol style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>
               <a
                 href="https://app.ardrive.io/"
@@ -111,7 +111,7 @@ const Manual: React.FC = () => {
           </ol>
 
           <h5>💡 TURBOの特徴：</h5>
-          <ul>
+          <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>
               <strong>簡単購入：</strong>クレジットカードで直接購入可能
             </li>
@@ -129,7 +129,7 @@ const Manual: React.FC = () => {
           </ul>
 
           <h5>📊 料金目安：</h5>
-          <ul>
+          <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>
               <strong>写真（1-5MB）：</strong>約$0.01-0.05
             </li>
@@ -161,7 +161,7 @@ const Manual: React.FC = () => {
           }}
         >
           <h5>ArDriveからの取得：</h5>
-          <ol>
+          <ol style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>ArDriveにログイン</li>
             <li>右上のプロフィールアイコンをクリック</li>
             <li>「Profile」→「Wallet」タブを選択</li>
@@ -170,13 +170,13 @@ const Manual: React.FC = () => {
           </ol>
 
           <h5>Arweave.appからの取得：</h5>
-          <ol>
+          <ol style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>Arweave.appでウォレットを作成</li>
             <li>「Download」ボタンでJSONファイルを保存</li>
           </ol>
 
           <h5>ArConnect拡張機能の場合：</h5>
-          <ol>
+          <ol style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>ArConnect拡張機能を開く</li>
             <li>「Export Wallet」機能を使用</li>
             <li>秘密鍵をJSONファイルとして出力</li>
@@ -192,7 +192,7 @@ const Manual: React.FC = () => {
           }}
         >
           <h5>🔐 セキュリティ上の注意：</h5>
-          <ul>
+          <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>ウォレットファイルは絶対に他人と共有しないでください</li>
             <li>複数の安全な場所にバックアップを保存してください</li>
             <li>パスワード保護されたフォルダに保存することを推奨します</li>
@@ -201,7 +201,7 @@ const Manual: React.FC = () => {
         </div>
 
         <h3>📁 ファイルアップロード手順</h3>
-        <ol>
+        <ol style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>ウォレット読み込み：</strong>
             JSON形式のArweaveウォレットファイルを選択
@@ -220,7 +220,7 @@ const Manual: React.FC = () => {
         </ol>
 
         <h3>📋 アップロード済みファイル管理</h3>
-        <ul>
+        <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>履歴表示：</strong>
             「アップロード済みファイル一覧」ボタンで確認
@@ -248,7 +248,7 @@ const Manual: React.FC = () => {
           }}
         >
           <strong>💡 重要な注意事項：</strong>
-          <ul>
+          <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>
               Arweaveにアップロードされたファイルは<strong>永続的</strong>
               で削除できません
@@ -263,7 +263,7 @@ const Manual: React.FC = () => {
         <h2>2. NFTメタデータ作成</h2>
 
         <h3>📝 基本情報入力</h3>
-        <ul>
+        <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>名前：</strong>NFTの名前（必須）
           </li>
@@ -285,7 +285,7 @@ const Manual: React.FC = () => {
         </ul>
 
         <h3>🏷️ 属性（Attributes）管理</h3>
-        <ul>
+        <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>追加：</strong>特性名と値を入力して「追加」ボタン
           </li>
@@ -305,7 +305,7 @@ const Manual: React.FC = () => {
         </ul>
 
         <h3>🖼️ プレビュー機能</h3>
-        <ul>
+        <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>リアルタイムプレビュー：</strong>
             右側にNFTの見た目をリアルタイム表示
@@ -320,7 +320,7 @@ const Manual: React.FC = () => {
         </ul>
 
         <h3>💾 データ管理</h3>
-        <ul>
+        <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>JSONコピー：</strong>
             生成されたメタデータJSONをクリップボードにコピー
@@ -355,7 +355,13 @@ const Manual: React.FC = () => {
             }}
           >
             <h4>📷 画像</h4>
-            <ul style={{ fontSize: "0.9rem" }}>
+            <ul
+              style={{
+                fontSize: "0.9rem",
+                paddingLeft: "1.5rem",
+                margin: "0.5rem 0",
+              }}
+            >
               <li>PNG (.png)</li>
               <li>JPEG (.jpg, .jpeg)</li>
               <li>GIF (.gif)</li>
@@ -372,7 +378,13 @@ const Manual: React.FC = () => {
             }}
           >
             <h4>🎬 動画</h4>
-            <ul style={{ fontSize: "0.9rem" }}>
+            <ul
+              style={{
+                fontSize: "0.9rem",
+                paddingLeft: "1.5rem",
+                margin: "0.5rem 0",
+              }}
+            >
               <li>MP4 (.mp4)</li>
               <li>WebM (.webm)</li>
             </ul>
@@ -387,7 +399,13 @@ const Manual: React.FC = () => {
             }}
           >
             <h4>🎵 音声</h4>
-            <ul style={{ fontSize: "0.9rem" }}>
+            <ul
+              style={{
+                fontSize: "0.9rem",
+                paddingLeft: "1.5rem",
+                margin: "0.5rem 0",
+              }}
+            >
               <li>MP3 (.mp3)</li>
               <li>WAV (.wav)</li>
             </ul>
@@ -402,7 +420,13 @@ const Manual: React.FC = () => {
             }}
           >
             <h4>🎯 3Dモデル</h4>
-            <ul style={{ fontSize: "0.9rem" }}>
+            <ul
+              style={{
+                fontSize: "0.9rem",
+                paddingLeft: "1.5rem",
+                margin: "0.5rem 0",
+              }}
+            >
               <li>GLB (.glb)</li>
               <li>GLTF (.gltf)</li>
             </ul>
@@ -417,7 +441,13 @@ const Manual: React.FC = () => {
             }}
           >
             <h4>📄 文書</h4>
-            <ul style={{ fontSize: "0.9rem" }}>
+            <ul
+              style={{
+                fontSize: "0.9rem",
+                paddingLeft: "1.5rem",
+                margin: "0.5rem 0",
+              }}
+            >
               <li>PDF (.pdf)</li>
               <li>JSON (.json)</li>
               <li>テキスト (.txt)</li>
@@ -465,7 +495,7 @@ const Manual: React.FC = () => {
 
       <section>
         <h2>5. 技術情報</h2>
-        <ul>
+        <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>ブロックチェーン：</strong>Arweave
           </li>

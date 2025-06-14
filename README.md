@@ -1,4 +1,4 @@
-# ArTool - 統合 NFT ツール
+# ArDrive - 統合ツール
 
 ArDrive アップロード機能と NFT メタデータ作成機能を統合した Web アプリケーション。
 
@@ -38,7 +38,7 @@ bun install
 bun dev
 ```
 
-http://localhost:3001 でアクセス可能
+http://localhost:3000 でアクセス可能
 
 ### 本番ビルド
 
