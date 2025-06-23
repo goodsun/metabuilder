@@ -4,6 +4,7 @@ import { ArdriveClient } from "./ardrive";
 import MetadataCreator from "./components/MetadataCreator";
 import Manual from "./components/Manual";
 import FileHistory from "./components/FileHistory";
+import ImageResizer from "./components/ImageResizer";
 
 interface UploadedFile {
   id: string;
@@ -50,11 +51,11 @@ const ArDriveUploader: React.FC = () => {
 
       try {
         console.log("Starting wallet initialization...");
-        
+
         // ウォレット切り替え時にlocalStorageをクリア（初期化前に実行）
         localStorage.removeItem("uploadedFiles");
         ardriveClient.current.clearUploadedFiles();
-        
+
         const result = await ardriveClient.current.initialize({
           walletFile: file,
         });
@@ -79,11 +80,16 @@ const ArDriveUploader: React.FC = () => {
           localStorage.setItem("uploadedFiles", JSON.stringify(currentFiles));
           setUploadState((prev) => ({
             ...prev,
-            success: `ウォレットが正常に読み込まれました（${result.filesCount || 0}件のファイルを取得）`,
+            success: `ウォレットが正常に読み込まれました（${
+              result.filesCount || 0
+            }件のファイルを取得）`,
             error: null,
           }));
-          
-          console.log("Files loaded after initialization:", currentFiles.length);
+
+          console.log(
+            "Files loaded after initialization:",
+            currentFiles.length
+          );
         } else {
           console.error("Wallet initialization failed");
           setUploadState((prev) => ({
@@ -380,7 +386,14 @@ const ArDriveUploader: React.FC = () => {
                 borderRadius: "8px",
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "1rem",
+                }}
+              >
                 <h3 style={{ margin: 0 }}>アップロード済みファイル</h3>
                 <button
                   onClick={() => {
@@ -400,7 +413,13 @@ const ArDriveUploader: React.FC = () => {
                   リフレッシュ
                 </button>
               </div>
-              <p style={{ fontSize: "0.8rem", color: "#666", margin: "0 0 1rem 0" }}>
+              <p
+                style={{
+                  fontSize: "0.8rem",
+                  color: "#666",
+                  margin: "0 0 1rem 0",
+                }}
+              >
                 デバッグ: {uploadedFiles.length}件のファイル
               </p>
               {uploadedFiles.length === 0 ? (
@@ -675,6 +694,17 @@ const App: React.FC = () => {
               Material Vault
             </Link>
             <Link
+              to="/resizer"
+              style={{
+                textDecoration: "none",
+                color: "#007bff",
+                fontWeight: "bold",
+                fontSize: "1.1rem",
+              }}
+            >
+              Image Resizer
+            </Link>
+            <Link
               to="/manual"
               style={{
                 textDecoration: "none",
@@ -692,6 +722,7 @@ const App: React.FC = () => {
           <Route path="/" element={<ArDriveUploader />} />
           <Route path="/metadata" element={<MetadataCreator />} />
           <Route path="/history" element={<FileHistory />} />
+          <Route path="/resizer" element={<ImageResizer />} />
           <Route path="/manual" element={<Manual />} />
         </Routes>
 
@@ -716,7 +747,7 @@ const App: React.FC = () => {
             }}
           >
             {import.meta.env.VITE_FOOTER_DISP ||
-              "© 2024 MetaBuilder. All rights reserved."}
+              "© 2025 bon-soleil. All rights reserved."}
           </a>
         </footer>
       </div>

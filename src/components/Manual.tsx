@@ -337,7 +337,112 @@ const Manual: React.FC = () => {
       </section>
 
       <section style={{ marginBottom: "3rem" }}>
-        <h2>3. 対応ファイル形式</h2>
+        <h2>3. 画像リサイズツール</h2>
+
+        <div
+          style={{
+            background: "#f8f9fa",
+            padding: "1.5rem",
+            borderRadius: "8px",
+            marginBottom: "2rem",
+          }}
+        >
+          <p>
+            Material VaultとManualの間に配置された画像リサイズツールは、画像のサイズや形式を変更してファイルサイズを最適化するためのツールです。
+          </p>
+        </div>
+
+        <h3>📷 画像選択</h3>
+        <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
+          <li>
+            <strong>ドラッグ&ドロップ：</strong>
+            画像ファイルを直接ドラッグしてアップロードエリアにドロップ
+          </li>
+          <li>
+            <strong>クリック選択：</strong>
+            アップロードエリアをクリックしてファイル選択ダイアログから選択
+          </li>
+          <li>
+            <strong>対応形式：</strong>JPEG, PNG, WebP, GIF
+          </li>
+        </ul>
+
+        <h3>⚙️ リサイズ設定</h3>
+        <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
+          <li>
+            <strong>アスペクト比を維持：</strong>
+            チェックすると幅または高さを変更した際に自動で比率を保持
+          </li>
+          <li>
+            <strong>幅・高さ設定：</strong>
+            ピクセル単位で出力サイズを指定（アスペクト比維持時は片方を変更すると自動計算）
+          </li>
+          <li>
+            <strong>出力形式：</strong>
+            <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
+              <li><strong>JPEG：</strong>写真に適した圧縮形式（品質調整可能）</li>
+              <li><strong>PNG：</strong>透明度を保持、可逆圧縮</li>
+              <li><strong>WebP：</strong>高圧縮率、現代的な形式（品質調整可能）</li>
+            </ul>
+          </li>
+          <li>
+            <strong>品質設定：</strong>
+            JPEG・WebPの場合、10%〜100%で圧縮品質を調整
+          </li>
+        </ul>
+
+        <h3>🖼️ プレビュー・出力</h3>
+        <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
+          <li>
+            <strong>リアルタイムプレビュー：</strong>
+            設定変更後「リサイズ実行」ボタンでプレビューを表示
+          </li>
+          <li>
+            <strong>ファイルサイズ推定：</strong>
+            出力後のファイルサイズを表示
+          </li>
+          <li>
+            <strong>ダウンロード：</strong>
+            「ダウンロード」ボタンで加工済み画像を保存
+          </li>
+        </ul>
+
+        <div
+          style={{
+            background: "#fff3cd",
+            padding: "1rem",
+            borderRadius: "6px",
+            marginBottom: "1rem",
+          }}
+        >
+          <strong>💡 使用例：</strong>
+          <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
+            <li>NFT作成前の画像最適化</li>
+            <li>大きな画像ファイルの軽量化</li>
+            <li>SNS投稿用サイズへの調整</li>
+            <li>異なる形式への変換</li>
+          </ul>
+        </div>
+
+        <div
+          style={{
+            background: "#d4edda",
+            padding: "1rem",
+            borderRadius: "6px",
+            marginBottom: "1rem",
+          }}
+        >
+          <strong>🔧 技術仕様：</strong>
+          <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
+            <li>Canvas APIによる高品質リサイズ</li>
+            <li>ブラウザ内処理（サーバーにアップロードなし）</li>
+            <li>imageSmoothingEnabled による高品質スケーリング</li>
+          </ul>
+        </div>
+      </section>
+
+      <section style={{ marginBottom: "3rem" }}>
+        <h2>4. 対応ファイル形式</h2>
 
         <div
           style={{
@@ -457,7 +562,7 @@ const Manual: React.FC = () => {
       </section>
 
       <section style={{ marginBottom: "3rem" }}>
-        <h2>4. よくある質問</h2>
+        <h2>5. よくある質問</h2>
 
         <div style={{ marginBottom: "1.5rem" }}>
           <h3>Q: アップロードしたファイルを削除できますか？</h3>
@@ -494,7 +599,7 @@ const Manual: React.FC = () => {
       </section>
 
       <section>
-        <h2>5. 技術情報</h2>
+        <h2>6. 技術情報</h2>
         <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>ブロックチェーン：</strong>Arweave
