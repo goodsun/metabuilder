@@ -640,83 +640,148 @@ const ArDriveUploader: React.FC = () => {
   );
 };
 
+const ResponsiveNav: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const menuItems = [
+    { to: "/", label: "ArDrive Uploader" },
+    { to: "/metadata", label: "Metadata Builder" },
+    { to: "/history", label: "Material Vault" },
+    { to: "/resizer", label: "Image Resizer" },
+    { to: "/manual", label: "Manual" },
+  ];
+
+  return (
+    <nav
+      style={{
+        background: "white",
+        padding: "1rem",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        marginBottom: "2rem",
+        position: "relative",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Link
+          to="/"
+          style={{
+            textDecoration: "none",
+            color: "#007bff",
+            fontWeight: "bold",
+            fontSize: "1.2rem",
+          }}
+        >
+          ArDriveTools
+        </Link>
+
+        {/* デスクトップメニュー */}
+        <div
+          style={{
+            display: "flex",
+            gap: "2rem",
+            alignItems: "center",
+          }}
+          className="desktop-menu"
+        >
+          {menuItems.slice(1).map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              style={{
+                textDecoration: "none",
+                color: "#007bff",
+                fontWeight: "bold",
+                fontSize: "1rem",
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+
+        {/* ハンバーガーメニューボタン */}
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          style={{
+            display: "none",
+            background: "none",
+            border: "none",
+            fontSize: "1.5rem",
+            cursor: "pointer",
+            padding: "0.5rem",
+          }}
+          className="hamburger-btn"
+        >
+          ☰
+        </button>
+      </div>
+
+      {/* モバイルメニュー */}
+      {isMenuOpen && (
+        <div
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            right: 0,
+            background: "white",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            zIndex: 1000,
+            display: "none",
+          }}
+          className="mobile-menu"
+        >
+          {menuItems.slice(1).map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              onClick={() => setIsMenuOpen(false)}
+              style={{
+                display: "block",
+                padding: "1rem 2rem",
+                textDecoration: "none",
+                color: "#007bff",
+                fontWeight: "bold",
+                borderBottom: "1px solid #eee",
+                fontSize: "1rem",
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+
+      <style>{`
+        @media (max-width: 768px) {
+          .desktop-menu {
+            display: none !important;
+          }
+          .hamburger-btn {
+            display: block !important;
+          }
+          .mobile-menu {
+            display: block !important;
+          }
+        }
+      `}</style>
+    </nav>
+  );
+};
+
 const App: React.FC = () => {
   return (
     <Router>
       <div style={{ minHeight: "100vh", background: "#f5f5f5", width: "100%" }}>
-        <nav
-          style={{
-            background: "white",
-            padding: "1rem",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            marginBottom: "2rem",
-          }}
-        >
-          <div
-            style={{
-              maxWidth: "1200px",
-              margin: "0 auto",
-              display: "flex",
-              gap: "2rem",
-            }}
-          >
-            <Link
-              to="/"
-              style={{
-                textDecoration: "none",
-                color: "#007bff",
-                fontWeight: "bold",
-                fontSize: "1.1rem",
-              }}
-            >
-              ArDrive Uploader
-            </Link>
-            <Link
-              to="/metadata"
-              style={{
-                textDecoration: "none",
-                color: "#007bff",
-                fontWeight: "bold",
-                fontSize: "1.1rem",
-              }}
-            >
-              Metadata Builder
-            </Link>
-            <Link
-              to="/history"
-              style={{
-                textDecoration: "none",
-                color: "#007bff",
-                fontWeight: "bold",
-                fontSize: "1.1rem",
-              }}
-            >
-              Material Vault
-            </Link>
-            <Link
-              to="/resizer"
-              style={{
-                textDecoration: "none",
-                color: "#007bff",
-                fontWeight: "bold",
-                fontSize: "1.1rem",
-              }}
-            >
-              Image Resizer
-            </Link>
-            <Link
-              to="/manual"
-              style={{
-                textDecoration: "none",
-                color: "#007bff",
-                fontWeight: "bold",
-                fontSize: "1.1rem",
-              }}
-            >
-              Manual
-            </Link>
-          </div>
-        </nav>
+        <ResponsiveNav />
 
         <Routes>
           <Route path="/" element={<ArDriveUploader />} />

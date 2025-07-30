@@ -1,10 +1,25 @@
 import React from "react";
 
 const Manual: React.FC = () => {
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div
       className="container"
-      style={{ maxWidth: "900px", margin: "0 auto", padding: "2rem" }}
+      style={{ 
+        maxWidth: "900px", 
+        margin: "0 auto", 
+        padding: isMobile ? "1rem" : "2rem" 
+      }}
     >
       <h1>ArDriveTools 使用マニュアル</h1>
 
@@ -447,7 +462,7 @@ const Manual: React.FC = () => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(200px, 1fr))",
             gap: "1rem",
           }}
         >

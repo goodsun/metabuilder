@@ -35,9 +35,19 @@ const FileHistory: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "date" | "size">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
     loadFilesFromStorage();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const loadFilesFromStorage = () => {
@@ -244,8 +254,12 @@ const FileHistory: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
-      <h1>Material Vault</h1>
+    <div style={{ 
+      maxWidth: "1200px", 
+      margin: "0 auto", 
+      padding: isMobile ? "1rem" : "2rem" 
+    }}>
+      <h1 style={{ fontSize: isMobile ? "1.5rem" : "2rem" }}>Material Vault</h1>
       <div
         style={{
           marginBottom: "2rem",
@@ -253,9 +267,10 @@ const FileHistory: React.FC = () => {
           backgroundColor: "#f8f9fa",
           borderRadius: "8px",
           display: "flex",
+          flexDirection: isMobile ? "column" : "row",
           flexWrap: "wrap",
           gap: "1rem",
-          alignItems: "center",
+          alignItems: isMobile ? "stretch" : "center",
         }}
       >
         <div style={{ flex: "1", minWidth: "200px" }}>

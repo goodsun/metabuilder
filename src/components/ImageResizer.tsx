@@ -13,6 +13,7 @@ const ImageResizer: React.FC = () => {
   const [originalImage, setOriginalImage] = useState<HTMLImageElement | null>(null);
   const [resizedImageUrl, setResizedImageUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [resizeOptions, setResizeOptions] = useState<ResizeOptions>({
     width: 800,
     height: 600,
@@ -23,6 +24,15 @@ const ImageResizer: React.FC = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleFileSelect = useCallback((file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -132,15 +142,79 @@ const ImageResizer: React.FC = () => {
     }
   }, [originalImage, resizeOptions, calculateDimensions]);
 
+  const isIOS = useCallback(() => {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent);
+  }, []);
+
   const handleDownload = useCallback(() => {
     if (!resizedImageUrl || !selectedFile) return;
 
-    const link = document.createElement("a");
     const fileName = selectedFile.name.replace(/\.[^/.]+$/, "");
-    link.download = `${fileName}_resized.${resizeOptions.format}`;
-    link.href = resizedImageUrl;
-    link.click();
-  }, [resizedImageUrl, selectedFile, resizeOptions.format]);
+    const finalFileName = `${fileName}_resized.${resizeOptions.format}`;
+
+    if (isIOS()) {
+      // iOS用の処理
+      const newWindow = window.open();
+      if (newWindow) {
+        newWindow.document.write(`
+          <html>
+            <head>
+              <title>${finalFileName}</title>
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <style>
+                body { 
+                  margin: 0; 
+                  padding: 20px; 
+                  text-align: center; 
+                  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                  background: #f5f5f5;
+                }
+                img { 
+                  max-width: 100%; 
+                  height: auto; 
+                  border-radius: 8px;
+                  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+                .download-instruction {
+                  background: white;
+                  padding: 15px;
+                  border-radius: 8px;
+                  margin: 20px 0;
+                  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+                .step {
+                  margin: 10px 0;
+                  padding: 10px;
+                  background: #e3f2fd;
+                  border-radius: 6px;
+                  font-size: 14px;
+                }
+              </style>
+            </head>
+            <body>
+              <h2>${finalFileName}</h2>
+              <img src="${resizedImageUrl}" alt="${finalFileName}" />
+              <div class="download-instruction">
+                <h3>📱 iPhoneで画像を保存する方法</h3>
+                <div class="step">1. 上の画像を長押しします</div>
+                <div class="step">2. 「"写真"に保存」をタップします</div>
+                <div class="step">3. 写真アプリに保存されます</div>
+              </div>
+            </body>
+          </html>
+        `);
+        newWindow.document.close();
+      } else {
+        alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。');
+      }
+    } else {
+      // 通常のダウンロード処理
+      const link = document.createElement("a");
+      link.download = finalFileName;
+      link.href = resizedImageUrl;
+      link.click();
+    }
+  }, [resizedImageUrl, selectedFile, resizeOptions.format, isIOS]);
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 Bytes";
@@ -158,15 +232,19 @@ const ImageResizer: React.FC = () => {
   }, [resizedImageUrl]);
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
-      <h1>画像リサイズツール</h1>
+    <div style={{ 
+      maxWidth: "1200px", 
+      margin: "0 auto", 
+      padding: isMobile ? "1rem" : "2rem" 
+    }}>
+      <h1 style={{ fontSize: isMobile ? "1.5rem" : "2rem" }}>画像リサイズツール</h1>
       
       <div style={{ marginBottom: "2rem" }}>
         <div
           style={{
             border: "2px dashed #ddd",
             borderRadius: "8px",
-            padding: "2rem",
+            padding: isMobile ? "1rem" : "2rem",
             textAlign: "center",
             cursor: "pointer",
             backgroundColor: selectedFile ? "#f8f9fa" : "white",
@@ -204,7 +282,12 @@ const ImageResizer: React.FC = () => {
       </div>
 
       {selectedFile && originalImage && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginBottom: "2rem" }}>
+        <div style={{ 
+          display: "grid", 
+          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", 
+          gap: "2rem", 
+          marginBottom: "2rem" 
+        }}>
           <div>
             <h3>リサイズ設定</h3>
             <div style={{ display: "grid", gap: "1rem" }}>
@@ -335,10 +418,70 @@ const ImageResizer: React.FC = () => {
                         borderRadius: "4px",
                         cursor: "pointer",
                         marginTop: "0.5rem",
+                        width: isMobile ? "100%" : "auto",
                       }}
                     >
-                      ダウンロード
+                      {isIOS() ? "写真に保存" : "ダウンロード"}
                     </button>
+                    {isIOS() && (
+                      <div style={{ 
+                        marginTop: "1rem",
+                        padding: "1rem",
+                        backgroundColor: "#e3f2fd",
+                        borderRadius: "8px",
+                        border: "1px solid #bbdefb"
+                      }}>
+                        <h4 style={{ 
+                          margin: "0 0 0.5rem 0", 
+                          fontSize: "0.9rem", 
+                          color: "#1976d2" 
+                        }}>
+                          📱 iPhoneで写真に保存する手順
+                        </h4>
+                        <div style={{ fontSize: "0.8rem", color: "#333" }}>
+                          <div style={{ 
+                            margin: "0.5rem 0", 
+                            padding: "0.5rem", 
+                            backgroundColor: "white", 
+                            borderRadius: "4px" 
+                          }}>
+                            <strong>1.</strong> 上の「写真に保存」ボタンをタップ
+                          </div>
+                          <div style={{ 
+                            margin: "0.5rem 0", 
+                            padding: "0.5rem", 
+                            backgroundColor: "white", 
+                            borderRadius: "4px" 
+                          }}>
+                            <strong>2.</strong> 新しいタブで画像が表示されます
+                          </div>
+                          <div style={{ 
+                            margin: "0.5rem 0", 
+                            padding: "0.5rem", 
+                            backgroundColor: "white", 
+                            borderRadius: "4px" 
+                          }}>
+                            <strong>3.</strong> 画像を長押しします
+                          </div>
+                          <div style={{ 
+                            margin: "0.5rem 0", 
+                            padding: "0.5rem", 
+                            backgroundColor: "white", 
+                            borderRadius: "4px" 
+                          }}>
+                            <strong>4.</strong> 「"写真"に保存」をタップ
+                          </div>
+                          <div style={{ 
+                            margin: "0.5rem 0", 
+                            padding: "0.5rem", 
+                            backgroundColor: "#c8e6c9", 
+                            borderRadius: "4px" 
+                          }}>
+                            <strong>✅</strong> 写真アプリに保存完了！
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : (
