@@ -17,13 +17,32 @@ interface NFTMetadata {
   attributes: NFTAttribute[];
 }
 
+const METADATA_STORAGE_KEY = "metadataCreator_draft";
+
 const MetadataCreator: React.FC = () => {
-  const [metadata, setMetadata] = useState<NFTMetadata>({
-    name: "",
-    description: "",
-    image: "",
-    attributes: [],
-  });
+  // localStorageから初期データを取得
+  const getInitialMetadata = (): NFTMetadata => {
+    try {
+      const saved = localStorage.getItem(METADATA_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // データの整合性確認
+        if (parsed && typeof parsed === "object" && "name" in parsed) {
+          return parsed;
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load saved metadata:", error);
+    }
+    return {
+      name: "",
+      description: "",
+      image: "",
+      attributes: [],
+    };
+  };
+
+  const [metadata, setMetadata] = useState<NFTMetadata>(getInitialMetadata());
 
   const [newAttribute, setNewAttribute] = useState({
     trait_type: "",
@@ -87,6 +106,40 @@ const MetadataCreator: React.FC = () => {
       mimeType.includes("glb")
     );
   };
+
+  // メタデータが変更されたらlocalStorageに保存
+  useEffect(() => {
+    try {
+      localStorage.setItem(METADATA_STORAGE_KEY, JSON.stringify(metadata));
+    } catch (error) {
+      console.error("Failed to save metadata:", error);
+    }
+  }, [metadata]);
+
+  // 他のタブ/ウィンドウでのlocalStorage変更を監視
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === METADATA_STORAGE_KEY && e.newValue) {
+        try {
+          const newMetadata = JSON.parse(e.newValue);
+          // データの整合性確認
+          if (newMetadata && typeof newMetadata === "object" && "name" in newMetadata) {
+            setMetadata(newMetadata);
+            // 属性のMIMEタイプを再チェック
+            setAttributeMimeTypes({});
+          }
+        } catch (error) {
+          console.error("Failed to parse storage change:", error);
+        }
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (metadata.animation_url) {
@@ -579,6 +632,25 @@ const MetadataCreator: React.FC = () => {
         </button>
         <button onClick={downloadJSON} className="btn btn-secondary">
           JSONをダウンロード
+        </button>
+        <button 
+          onClick={() => {
+            if (window.confirm("編集中のデータをクリアしますか？")) {
+              const emptyMetadata = {
+                name: "",
+                description: "",
+                image: "",
+                attributes: [],
+              };
+              setMetadata(emptyMetadata);
+              setNewAttribute({ trait_type: "", value: "" });
+              localStorage.removeItem(METADATA_STORAGE_KEY);
+            }
+          }} 
+          className="btn" 
+          style={{ backgroundColor: "#dc3545", marginLeft: "10px" }}
+        >
+          データをクリア
         </button>
       </div>
 
