@@ -51,8 +51,14 @@ const FileHistory: React.FC = () => {
     window.addEventListener('storage', handleStorageChange);
     
     // 同じウィンドウ内での変更も監視するために、定期的にチェック
+    // 前回の値と比較して変更があった場合のみ更新
+    let lastStorageValue = localStorage.getItem("uploadedFiles");
     const intervalId = setInterval(() => {
-      loadFilesFromStorage();
+      const currentStorageValue = localStorage.getItem("uploadedFiles");
+      if (currentStorageValue !== lastStorageValue) {
+        lastStorageValue = currentStorageValue;
+        loadFilesFromStorage();
+      }
     }, 2000); // 2秒ごとにチェック
     
     return () => {
@@ -79,7 +85,14 @@ const FileHistory: React.FC = () => {
           ...file,
           uploadDate: new Date(file.uploadDate),
         }));
-        setUploadedFiles(filesWithDates);
+        
+        // 前回と同じデータの場合は更新しない（不要な再レンダリングを防ぐ）
+        setUploadedFiles((prevFiles) => {
+          if (JSON.stringify(prevFiles) === JSON.stringify(filesWithDates)) {
+            return prevFiles;
+          }
+          return filesWithDates;
+        });
       } catch (error) {
         console.error("Failed to load files from storage:", error);
       }
