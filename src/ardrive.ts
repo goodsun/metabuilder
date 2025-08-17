@@ -39,6 +39,7 @@ export class ArdriveClient {
   private walletAddress: string | null = null;
   private arweave: Arweave;
   private walletJWK: any = null;
+  private historyLoadingCallback?: (loaded: number, total?: number) => void;
 
   constructor() {
     this.turbo = null;
@@ -235,6 +236,54 @@ export class ArdriveClient {
   getUploadedFiles(): UploadedFile[] {
     return [...this.uploadedFiles];
   }
+  
+  setHistoryLoadingCallback(callback?: (loaded: number, total?: number) => void) {
+    this.historyLoadingCallback = callback;
+  }
+  
+  private async fetchRemainingHistory(startCursor: string): Promise<void> {
+    console.log("Fetching remaining history in background...");
+    let cursor: string | undefined = startCursor;
+    let hasNextPage = true;
+    let totalFetched = 20; // 初回で20件取得済み
+    
+    while (hasNextPage && cursor) {
+      try {
+        // 遅延を入れてサーバー負荷を軽減
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const result = await this.getUploadHistoryFromArweave(
+          this.walletAddress!,
+          cursor
+        );
+        
+        if (result.files.length > 0) {
+          const mergedHistory = this.mergeUploadHistories(
+            this.uploadedFiles,
+            result.files
+          );
+          this.uploadedFiles = mergedHistory;
+          this.saveUploadedFiles();
+          
+          totalFetched += result.files.length;
+          console.log(`Fetched ${totalFetched} files so far...`);
+          
+          // コールバックを呼び出して進捗を通知
+          if (this.historyLoadingCallback) {
+            this.historyLoadingCallback(this.uploadedFiles.length);
+          }
+        }
+        
+        hasNextPage = result.hasNextPage;
+        cursor = result.cursor;
+      } catch (error) {
+        console.error("Failed to fetch additional history:", error);
+        break; // エラーが発生したら中止
+      }
+    }
+    
+    console.log(`History sync complete. Total files: ${this.uploadedFiles.length}`);
+  }
 
   async refreshUploadHistory(): Promise<void> {
     if (!this.walletAddress) {
@@ -281,16 +330,22 @@ export class ArdriveClient {
   }
 
   async getUploadHistoryFromArweave(
-    walletAddress: string
-  ): Promise<UploadedFile[]> {
+    walletAddress: string,
+    cursor?: string
+  ): Promise<{ files: UploadedFile[]; hasNextPage: boolean; cursor?: string }> {
     try {
       const queryObject = {
         query: `{
           transactions(
             owners:["${walletAddress}"],
-            first: 100
+            tags: [
+              { name: "Content-Type", values: ["image/png", "image/jpeg", "image/gif", "image/webp", "video/mp4", "video/webm", "audio/mpeg", "audio/ogg", "model/gltf-binary", "model/gltf+json", "application/json", "application/pdf"] }
+            ],
+            first: 20
+            ${cursor ? `, after: "${cursor}"` : ''}
           ) {
             edges {
+              cursor
               node {
                 id
                 tags {
@@ -305,13 +360,16 @@ export class ArdriveClient {
                 }
               }
             }
+            pageInfo {
+              hasNextPage
+            }
           }
         }`,
       };
 
       // AbortControllerを使用してタイムアウトを設定
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒タイムアウト
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15秒タイムアウト
 
       try {
         const response = await fetch("https://arweave.net/graphql", {
@@ -331,19 +389,28 @@ export class ArdriveClient {
 
         const data: ArweaveGraphQLResponse = await response.json();
 
-      if (data.errors) {
-        throw new Error(`GraphQL errors: ${JSON.stringify(data.errors)}`);
-      }
+        if (data.errors) {
+          throw new Error(`GraphQL errors: ${JSON.stringify(data.errors)}`);
+        }
 
-        return this.convertArweaveDataToUploadedFiles(
+        const files = this.convertArweaveDataToUploadedFiles(
           data.data.transactions.edges
         );
-      } catch (fetchError: any) {
+        
+        const lastEdge = data.data.transactions.edges[data.data.transactions.edges.length - 1];
+        
+        return {
+          files,
+          hasNextPage: data.data.transactions.pageInfo?.hasNextPage || false,
+          cursor: lastEdge?.cursor
+        };
+      } catch (error: any) {
         clearTimeout(timeoutId);
-        if (fetchError.name === 'AbortError') {
-          throw new Error('Request timed out after 10 seconds');
+        if (error.name === 'AbortError') {
+          throw new Error('Request timed out after 15 seconds');
         }
-        throw fetchError;
+        console.error("Failed to fetch upload history from Arweave:", error);
+        throw error;
       }
     } catch (error) {
       console.error("Failed to fetch upload history from Arweave:", error);
@@ -352,7 +419,7 @@ export class ArdriveClient {
   }
 
   private convertArweaveDataToUploadedFiles(
-    edges: Array<{ node: ArweaveTransaction }>
+    edges: Array<{ cursor?: string; node: ArweaveTransaction }>
   ): UploadedFile[] {
     const uploadedFiles: UploadedFile[] = [];
 
@@ -402,12 +469,21 @@ export class ArdriveClient {
       // リトライロジックを追加
       let retries = 3;
       let arweaveHistory: UploadedFile[] = [];
+      let cursor: string | undefined = undefined;
+      let hasNextPage = true;
+      let pageCount = 0;
       
-      while (retries > 0) {
+      // 初回の20件を取得
+      while (retries > 0 && pageCount === 0) {
         try {
-          arweaveHistory = await this.getUploadHistoryFromArweave(
-            this.walletAddress
+          const result = await this.getUploadHistoryFromArweave(
+            this.walletAddress,
+            cursor
           );
+          arweaveHistory = result.files;
+          hasNextPage = result.hasNextPage;
+          cursor = result.cursor;
+          pageCount++;
           break; // 成功したらループを抜ける
         } catch (error: any) {
           retries--;
@@ -417,19 +493,33 @@ export class ArdriveClient {
             console.warn("All retries exhausted. Proceeding without Arweave history.");
             // エラーを投げずに空の履歴で続行
             arweaveHistory = [];
+            hasNextPage = false;
           } else {
             // 次のリトライまで少し待機
             await new Promise(resolve => setTimeout(resolve, 1000));
           }
         }
       }
-      const mergedHistory = this.mergeUploadHistories(
-        this.uploadedFiles,
-        arweaveHistory
-      );
-
-      this.uploadedFiles = mergedHistory;
-      this.saveUploadedFiles();
+      
+      // 初回の結果を即座にマージ
+      if (arweaveHistory.length > 0) {
+        const mergedHistory = this.mergeUploadHistories(
+          this.uploadedFiles,
+          arweaveHistory
+        );
+        this.uploadedFiles = mergedHistory;
+        this.saveUploadedFiles();
+        
+        // 初回のコールバック
+        if (this.historyLoadingCallback) {
+          this.historyLoadingCallback(this.uploadedFiles.length);
+        }
+      }
+      
+      // バックグラウンドで残りを取得
+      if (hasNextPage && cursor) {
+        this.fetchRemainingHistory(cursor);
+      }
     } catch (error) {
       console.error("Failed to sync upload history:", error);
       // Don't throw error to prevent initialization failure

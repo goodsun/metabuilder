@@ -1,23 +1,27 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    nodePolyfills({
+      globals: {
+        Buffer: true,
+        global: true,
+        process: true,
+      },
+      protocolImports: true,
+    }),
+  ],
   server: {
     port: 3000,
     host: "0.0.0.0",
     open: true,
   },
   define: {
-    global: "globalThis",
-    process: JSON.stringify({
-      env: {},
-      version: "v18.0.0",
-      browser: true,
-      platform: "browser",
-      nextTick: "(fn) => setTimeout(fn, 0)",
-    }),
+    // Remove these as they will be handled by nodePolyfills plugin
   },
   resolve: {
     alias: {

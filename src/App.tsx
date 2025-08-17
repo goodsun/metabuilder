@@ -5,6 +5,7 @@ import MetadataCreator from "./components/MetadataCreator";
 import Manual from "./components/Manual";
 import FileHistory from "./components/FileHistory";
 import ImageResizer from "./components/ImageResizer";
+import LoadingSpinner from "./components/LoadingSpinner";
 import { saveWallet, loadWallet, clearWallet } from "./utils/walletStorage";
 
 interface UploadedFile {
@@ -30,6 +31,8 @@ const ArDriveUploader: React.FC = () => {
   const [balance, setBalance] = useState<string>("0");
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [showFileList, setShowFileList] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectingMessage, setConnectingMessage] = useState("");
   const [uploadState, setUploadState] = useState<UploadState>({
     isUploading: false,
     progress: 0,
@@ -52,6 +55,8 @@ const ArDriveUploader: React.FC = () => {
 
       try {
         console.log("Starting wallet initialization...");
+        setIsConnecting(true);
+        setConnectingMessage("ウォレットを読み込んでいます...");
 
         // ウォレット切り替え時にlocalStorageをクリア（初期化前に実行）
         localStorage.removeItem("uploadedFiles");
@@ -71,6 +76,8 @@ const ArDriveUploader: React.FC = () => {
           const walletJWK = JSON.parse(walletData);
           await saveWallet(walletJWK);
 
+          setConnectingMessage("ウォレット残高を確認しています...");
+          
           try {
             console.log("Getting wallet balance...");
             const walletBalance = await ardriveClient.current.getBalance();
@@ -80,6 +87,16 @@ const ArDriveUploader: React.FC = () => {
             console.warn("Failed to get balance:", balanceError);
             setBalance("取得に失敗");
           }
+          
+          setConnectingMessage("アップロード履歴を取得しています...");
+          
+          // バックグラウンドで取得される履歴を反映するコールバックを設定
+          ardriveClient.current.setHistoryLoadingCallback((loadedCount) => {
+            const updatedFiles = ardriveClient.current.getUploadedFiles();
+            setUploadedFiles(updatedFiles);
+            localStorage.setItem("uploadedFiles", JSON.stringify(updatedFiles));
+            console.log(`History updated: ${loadedCount} files loaded`);
+          });
 
           // 初期化完了時点で履歴同期も完了しているはず
           const currentFiles = ardriveClient.current.getUploadedFiles();
@@ -97,7 +114,10 @@ const ArDriveUploader: React.FC = () => {
             "Files loaded after initialization:",
             currentFiles.length
           );
+          
+          setIsConnecting(false);
         } else {
+          setIsConnecting(false);
           console.error("Wallet initialization failed");
           setUploadState((prev) => ({
             ...prev,
@@ -108,6 +128,7 @@ const ArDriveUploader: React.FC = () => {
         }
       } catch (error) {
         console.error("Wallet upload error:", error);
+        setIsConnecting(false);
         setUploadState((prev) => ({
           ...prev,
           error: `ウォレットエラー: ${
@@ -238,6 +259,9 @@ const ArDriveUploader: React.FC = () => {
         const savedWallet = await loadWallet();
         if (savedWallet) {
           console.log("Restoring saved wallet...");
+          setIsConnecting(true);
+          setConnectingMessage("保存されたウォレットを復元しています...");
+          
           const result = await ardriveClient.current.initialize({
             walletJWK: savedWallet,
           });
@@ -253,14 +277,26 @@ const ArDriveUploader: React.FC = () => {
               console.warn("Failed to get balance:", balanceError);
               setBalance("取得に失敗");
             }
+            
+            // バックグラウンドで取得される履歴を反映するコールバックを設定
+            ardriveClient.current.setHistoryLoadingCallback((loadedCount) => {
+              const updatedFiles = ardriveClient.current.getUploadedFiles();
+              setUploadedFiles(updatedFiles);
+              localStorage.setItem("uploadedFiles", JSON.stringify(updatedFiles));
+              console.log(`History updated: ${loadedCount} files loaded`);
+            });
 
             const currentFiles = ardriveClient.current.getUploadedFiles();
             setUploadedFiles(currentFiles);
             localStorage.setItem("uploadedFiles", JSON.stringify(currentFiles));
+            setIsConnecting(false);
+          } else {
+            setIsConnecting(false);
           }
         }
       } catch (error) {
         console.error("Failed to restore wallet:", error);
+        setIsConnecting(false);
       }
     };
 
@@ -349,6 +385,12 @@ const ArDriveUploader: React.FC = () => {
 
   return (
     <div className="container">
+      {isConnecting && (
+        <LoadingSpinner 
+          message={connectingMessage}
+          subMessage="Arweaveネットワークに接続しています。しばらくお待ちください..."
+        />
+      )}
       <h1>ArDrive Uploader</h1>
 
       {!isInitialized ? (

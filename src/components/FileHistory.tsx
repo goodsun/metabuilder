@@ -39,6 +39,26 @@ const FileHistory: React.FC = () => {
 
   useEffect(() => {
     loadFilesFromStorage();
+    
+    // localStorageの変更を監視
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'uploadedFiles') {
+        console.log('Storage updated, reloading files...');
+        loadFilesFromStorage();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    // 同じウィンドウ内での変更も監視するために、定期的にチェック
+    const intervalId = setInterval(() => {
+      loadFilesFromStorage();
+    }, 2000); // 2秒ごとにチェック
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(intervalId);
+    };
   }, []);
 
   useEffect(() => {
