@@ -160,7 +160,29 @@ const FileHistory: React.FC = () => {
   }, []);
 
   const FileIconOrThumbnail: React.FC<{ file: UploadedFile }> = ({ file }) => {
-    if (isImageFile(file.type)) {
+    const [jsonImageUrl, setJsonImageUrl] = useState<string | null>(null);
+    const [isLoadingJson, setIsLoadingJson] = useState(false);
+
+    useEffect(() => {
+      if (file.type === "application/json") {
+        setIsLoadingJson(true);
+        fetch(file.url)
+          .then(response => response.json())
+          .then(data => {
+            if (data.image && typeof data.image === "string") {
+              setJsonImageUrl(data.image);
+            }
+          })
+          .catch(error => {
+            console.error("Failed to load JSON content:", error);
+          })
+          .finally(() => {
+            setIsLoadingJson(false);
+          });
+      }
+    }, [file.url, file.type]);
+
+    if (isImageFile(file.type) || (file.type === "application/json" && jsonImageUrl)) {
       return (
         <div
           style={{
@@ -177,7 +199,7 @@ const FileHistory: React.FC = () => {
           }}
         >
           <img
-            src={file.url}
+            src={jsonImageUrl || file.url}
             alt={file.name}
             style={{
               maxWidth: "100%",
@@ -248,7 +270,11 @@ const FileHistory: React.FC = () => {
           fontSize: "2rem",
         }}
       >
-        {getFileIcon(file.type)}
+        {isLoadingJson && file.type === "application/json" ? (
+          <div style={{ color: "#666", fontSize: "0.8rem" }}>Loading...</div>
+        ) : (
+          getFileIcon(file.type)
+        )}
       </div>
     );
   };
