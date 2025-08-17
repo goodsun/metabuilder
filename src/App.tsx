@@ -5,6 +5,7 @@ import MetadataCreator from "./components/MetadataCreator";
 import Manual from "./components/Manual";
 import FileHistory from "./components/FileHistory";
 import ImageResizer from "./components/ImageResizer";
+import { saveWallet, loadWallet, clearWallet } from "./utils/walletStorage";
 
 interface UploadedFile {
   id: string;
@@ -55,6 +56,7 @@ const ArDriveUploader: React.FC = () => {
         // ウォレット切り替え時にlocalStorageをクリア（初期化前に実行）
         localStorage.removeItem("uploadedFiles");
         ardriveClient.current.clearUploadedFiles();
+        clearWallet();
 
         const result = await ardriveClient.current.initialize({
           walletFile: file,
@@ -63,6 +65,11 @@ const ArDriveUploader: React.FC = () => {
         if (result.success) {
           console.log("Wallet initialization successful");
           setIsInitialized(true);
+          
+          // ウォレット情報を暗号化して保存
+          const walletData = await file.text();
+          const walletJWK = JSON.parse(walletData);
+          await saveWallet(walletJWK);
 
           try {
             console.log("Getting wallet balance...");
@@ -222,6 +229,42 @@ const ArDriveUploader: React.FC = () => {
         console.error("Failed to load saved files:", error);
       }
     }
+  }, []);
+
+  // ページロード時に保存されたウォレット情報を復元
+  useEffect(() => {
+    const restoreWallet = async () => {
+      try {
+        const savedWallet = await loadWallet();
+        if (savedWallet) {
+          console.log("Restoring saved wallet...");
+          const result = await ardriveClient.current.initialize({
+            walletJWK: savedWallet,
+          });
+
+          if (result.success) {
+            console.log("Wallet restored successfully");
+            setIsInitialized(true);
+
+            try {
+              const walletBalance = await ardriveClient.current.getBalance();
+              setBalance(walletBalance);
+            } catch (balanceError) {
+              console.warn("Failed to get balance:", balanceError);
+              setBalance("取得に失敗");
+            }
+
+            const currentFiles = ardriveClient.current.getUploadedFiles();
+            setUploadedFiles(currentFiles);
+            localStorage.setItem("uploadedFiles", JSON.stringify(currentFiles));
+          }
+        }
+      } catch (error) {
+        console.error("Failed to restore wallet:", error);
+      }
+    };
+
+    restoreWallet();
   }, []);
 
   const formatFileSize = (bytes: number): string => {

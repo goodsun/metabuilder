@@ -4,6 +4,7 @@ import Arweave from "arweave";
 export interface ArdriveConfig {
   privateKey?: string;
   walletFile?: File;
+  walletJWK?: any;
 }
 
 export interface UploadedFile {
@@ -68,8 +69,15 @@ export class ArdriveClient {
         this.turbo = TurboFactory.authenticated({
           privateKey: wallet,
         });
+      } else if (config.walletJWK) {
+        console.log("Initializing with wallet JWK...");
+        this.walletJWK = config.walletJWK;
+        this.signer = new ArweaveSigner(config.walletJWK);
+        this.turbo = TurboFactory.authenticated({
+          privateKey: config.walletJWK,
+        });
       } else {
-        throw new Error("No private key or wallet file provided");
+        throw new Error("No private key, wallet file, or wallet JWK provided");
       }
 
       // Get wallet address
@@ -301,27 +309,42 @@ export class ArdriveClient {
         }`,
       };
 
-      const response = await fetch("https://arweave.net/graphql", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(queryObject),
-      });
+      // AbortControllerを使用してタイムアウトを設定
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒タイムアウト
 
-      if (!response.ok) {
-        throw new Error(`GraphQL request failed: ${response.status}`);
-      }
+      try {
+        const response = await fetch("https://arweave.net/graphql", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(queryObject),
+          signal: controller.signal,
+        });
 
-      const data: ArweaveGraphQLResponse = await response.json();
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`GraphQL request failed: ${response.status}`);
+        }
+
+        const data: ArweaveGraphQLResponse = await response.json();
 
       if (data.errors) {
         throw new Error(`GraphQL errors: ${JSON.stringify(data.errors)}`);
       }
 
-      return this.convertArweaveDataToUploadedFiles(
-        data.data.transactions.edges
-      );
+        return this.convertArweaveDataToUploadedFiles(
+          data.data.transactions.edges
+        );
+      } catch (fetchError: any) {
+        clearTimeout(timeoutId);
+        if (fetchError.name === 'AbortError') {
+          throw new Error('Request timed out after 10 seconds');
+        }
+        throw fetchError;
+      }
     } catch (error) {
       console.error("Failed to fetch upload history from Arweave:", error);
       throw error;
@@ -376,9 +399,30 @@ export class ArdriveClient {
         return;
       }
 
-      const arweaveHistory = await this.getUploadHistoryFromArweave(
-        this.walletAddress
-      );
+      // リトライロジックを追加
+      let retries = 3;
+      let arweaveHistory: UploadedFile[] = [];
+      
+      while (retries > 0) {
+        try {
+          arweaveHistory = await this.getUploadHistoryFromArweave(
+            this.walletAddress
+          );
+          break; // 成功したらループを抜ける
+        } catch (error: any) {
+          retries--;
+          console.warn(`GraphQL request failed, ${retries} retries left:`, error.message);
+          
+          if (retries === 0) {
+            console.warn("All retries exhausted. Proceeding without Arweave history.");
+            // エラーを投げずに空の履歴で続行
+            arweaveHistory = [];
+          } else {
+            // 次のリトライまで少し待機
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        }
+      }
       const mergedHistory = this.mergeUploadHistories(
         this.uploadedFiles,
         arweaveHistory
