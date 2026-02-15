@@ -428,7 +428,7 @@ const ArDriveUploader: React.FC = () => {
               style={{
                 marginTop: "1rem",
                 padding: "0.5rem 1rem",
-                backgroundColor: "#28a745",
+                backgroundColor: "rgba(255, 255, 255, 0.1)", border: "1px solid rgba(255, 255, 255, 0.3)",
                 color: "white",
                 border: "none",
                 borderRadius: "4px",
@@ -452,7 +452,7 @@ const ArDriveUploader: React.FC = () => {
               style={{
                 marginTop: "1rem",
                 padding: "0.5rem 1rem",
-                backgroundColor: "#dc3545",
+                backgroundColor: "rgba(255, 80, 60, 0.15)", border: "1px solid rgba(255, 80, 60, 0.3)",
                 color: "white",
                 border: "none",
                 borderRadius: "4px",
@@ -466,7 +466,7 @@ const ArDriveUploader: React.FC = () => {
             <div
               style={{
                 marginBottom: "2rem",
-                border: "1px solid #ddd",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
                 padding: "1rem",
                 borderRadius: "8px",
               }}
@@ -488,7 +488,7 @@ const ArDriveUploader: React.FC = () => {
                   }}
                   style={{
                     padding: "0.25rem 0.5rem",
-                    backgroundColor: "#17a2b8",
+                    backgroundColor: "rgba(255, 255, 255, 0.08)", border: "1px solid rgba(255, 255, 255, 0.2)",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
@@ -501,7 +501,7 @@ const ArDriveUploader: React.FC = () => {
               <p
                 style={{
                   fontSize: "0.8rem",
-                  color: "#666",
+                  color: "rgba(255, 255, 255, 0.5)",
                   margin: "0 0 1rem 0",
                 }}
               >
@@ -515,11 +515,11 @@ const ArDriveUploader: React.FC = () => {
                     <div
                       key={file.id}
                       style={{
-                        border: "1px solid #eee",
+                        border: "1px solid rgba(255, 255, 255, 0.06)",
                         padding: "1rem",
                         marginBottom: "0.5rem",
                         borderRadius: "4px",
-                        backgroundColor: "#f9f9f9",
+                        backgroundColor: "rgba(255, 255, 255, 0.03)",
                       }}
                     >
                       <div
@@ -561,7 +561,7 @@ const ArDriveUploader: React.FC = () => {
                               <div
                                 style={{
                                   fontSize: "12px",
-                                  color: "#666",
+                                  color: "rgba(255, 255, 255, 0.5)",
                                   fontFamily: "monospace",
                                   wordBreak: "break-all",
                                   flex: 1,
@@ -579,7 +579,7 @@ const ArDriveUploader: React.FC = () => {
                         <button
                           onClick={() => handleDeleteFile(file.id)}
                           style={{
-                            backgroundColor: "#ff4444",
+                            backgroundColor: "rgba(255, 80, 60, 0.15)", border: "1px solid rgba(255, 80, 60, 0.3)",
                             color: "white",
                             border: "none",
                             padding: "0.5rem 1rem",
@@ -631,7 +631,7 @@ const ArDriveUploader: React.FC = () => {
                 <p
                   style={{
                     fontSize: "0.9rem",
-                    color: "#666",
+                    color: "rgba(255, 255, 255, 0.5)",
                     marginTop: "0.5rem",
                   }}
                 >
@@ -684,15 +684,15 @@ const ArDriveUploader: React.FC = () => {
           marginTop: "3rem",
           textAlign: "center",
           padding: "2rem",
-          background: "#f8f9fa",
+          background: "rgba(255, 255, 255, 0.03)",
           borderRadius: "8px",
-          border: "1px solid #e9ecef",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
         }}
       >
-        <h3 style={{ marginBottom: "1rem", color: "#333" }}>
+        <h3 style={{ marginBottom: "1rem", color: "#f6f6f6" }}>
           ウォレット作成・TURBOクレジット購入
         </h3>
-        <p style={{ marginBottom: "1.5rem", color: "#666" }}>
+        <p style={{ marginBottom: "1.5rem", color: "rgba(255, 255, 255, 0.5)" }}>
           Arweaveウォレットの作成とTURBOクレジットの購入は
           ArDrive公式サイトで行えます
         </p>
@@ -703,7 +703,7 @@ const ArDriveUploader: React.FC = () => {
           style={{
             display: "inline-block",
             padding: "12px 24px",
-            backgroundColor: "#007bff",
+            backgroundColor: "rgba(255, 255, 255, 0.1)", border: "1px solid rgba(255, 255, 255, 0.3)",
             color: "white",
             textDecoration: "none",
             borderRadius: "6px",
@@ -712,10 +712,10 @@ const ArDriveUploader: React.FC = () => {
             transition: "background-color 0.2s",
           }}
           onMouseOver={(e) =>
-            (e.currentTarget.style.backgroundColor = "#0056b3")
+            (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.15)")
           }
           onMouseOut={(e) =>
-            (e.currentTarget.style.backgroundColor = "#007bff")
+            (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)")
           }
         >
           ArDrive公式サイトを開く
@@ -739,11 +739,12 @@ const ResponsiveNav: React.FC = () => {
   return (
     <nav
       style={{
-        background: "white",
+        background: "rgba(17, 19, 24, 0.95)",
         padding: "1rem",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
         marginBottom: "2rem",
         position: "relative",
+        backdropFilter: "blur(8px)",
       }}
     >
       <div
@@ -759,7 +760,7 @@ const ResponsiveNav: React.FC = () => {
           to="/"
           style={{
             textDecoration: "none",
-            color: "#007bff",
+            color: "#f6f6f6",
             fontWeight: "bold",
             fontSize: "1.2rem",
           }}
@@ -782,7 +783,7 @@ const ResponsiveNav: React.FC = () => {
               to={item.to}
               style={{
                 textDecoration: "none",
-                color: "#007bff",
+                color: "#d0d0d0",
                 fontWeight: "bold",
                 fontSize: "1rem",
               }}
@@ -817,8 +818,8 @@ const ResponsiveNav: React.FC = () => {
             top: "100%",
             left: 0,
             right: 0,
-            background: "white",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            background: "rgba(17, 19, 24, 0.98)",
+            boxShadow: "0 4px 16px rgba(0, 0, 0, 0.4)",
             zIndex: 1000,
             display: "none",
           }}
@@ -833,9 +834,9 @@ const ResponsiveNav: React.FC = () => {
                 display: "block",
                 padding: "1rem 2rem",
                 textDecoration: "none",
-                color: "#007bff",
+                color: "#d0d0d0",
                 fontWeight: "bold",
-                borderBottom: "1px solid #eee",
+                borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
                 fontSize: "1rem",
               }}
             >
@@ -865,7 +866,7 @@ const ResponsiveNav: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Router>
-      <div style={{ minHeight: "100vh", background: "#f5f5f5", width: "100%" }}>
+      <div style={{ minHeight: "100vh", background: "transparent", width: "100%" }}>
         <ResponsiveNav />
 
         <Routes>
@@ -881,9 +882,9 @@ const App: React.FC = () => {
             marginTop: "20px",
             padding: "2rem 1rem",
             textAlign: "center",
-            borderTop: "1px solid #e9ecef",
-            background: "white",
-            color: "#666",
+            borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+            background: "rgba(17, 19, 24, 0.95)",
+            color: "rgba(255, 255, 255, 0.4)",
             fontSize: "0.9rem",
           }}
         >
@@ -892,7 +893,7 @@ const App: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              color: "#666",
+              color: "rgba(255, 255, 255, 0.4)",
               textDecoration: "none",
             }}
           >

@@ -1,3 +1,7 @@
+/* =================================================
+   MetaBuilder — BizenDAO Theme
+   ================================================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -5,97 +9,128 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    sans-serif;
-  background-color: #f5f5f5;
-  color: #333;
-  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic",
+    "Noto Sans JP", system-ui, sans-serif;
+  background: radial-gradient(circle at top, #252933, #111318);
+  color: #f6f6f6;
+  line-height: 1.7;
+  min-height: 100vh;
 }
 
 #root {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
+a {
+  color: #f6f6f6;
+  text-decoration: none;
+}
+
+h1, h2, h3 {
+  color: #f6f6f6;
+  font-weight: 600;
+}
+
+/* ── Container ── */
 .container {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
-  background: white;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
+/* ── Upload Area ── */
 .upload-area {
-  border: 2px dashed #ddd;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   padding: 3rem;
   text-align: center;
   transition: all 0.3s ease;
   cursor: pointer;
+  background: rgba(255, 255, 255, 0.02);
+  color: #d0d0d0;
 }
 
 .upload-area:hover,
 .upload-area.dragover {
-  border-color: #007acc;
-  background-color: #f0f8ff;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
 }
 
+/* ── Buttons ── */
 .upload-button {
-  background: #007acc;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  border: 1px solid #ffffff;
+  background: rgba(0, 0, 0, 0.3);
+  color: #f6f6f6;
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
   margin-top: 1rem;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
 }
 
 .upload-button:hover {
-  background: #005a9e;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .upload-button:disabled {
-  background: #ccc;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
+button {
+  font-family: inherit;
+}
+
+/* ── Progress Bar ── */
 .progress-bar {
   width: 100%;
-  height: 20px;
-  background-color: #f0f0f0;
-  border-radius: 10px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
   overflow: hidden;
   margin: 1rem 0;
 }
 
 .progress-fill {
   height: 100%;
-  background-color: #007acc;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.7));
   transition: width 0.3s ease;
+  border-radius: 3px;
 }
 
+/* ── Status Messages ── */
 .error {
-  color: #e74c3c;
-  background-color: #fdf2f2;
+  color: #ff8a80;
+  background: rgba(255, 80, 60, 0.1);
+  border: 1px solid rgba(255, 80, 60, 0.2);
   padding: 1rem;
   border-radius: 6px;
   margin: 1rem 0;
 }
 
 .success {
-  color: #27ae60;
-  background-color: #f2fdf2;
+  color: #a5d6a7;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.2);
   padding: 1rem;
   border-radius: 6px;
   margin: 1rem 0;
 }
 
+/* ── File Info ── */
 .file-info {
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 1rem;
   border-radius: 6px;
   margin: 1rem 0;
@@ -107,5 +142,59 @@ body {
 
 .file-info p {
   margin: 0.25rem 0;
-  color: #666;
+  color: #d0d0d0;
+}
+
+/* ── Input / Form ── */
+input[type="text"],
+input[type="number"],
+input[type="url"],
+textarea,
+select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f6f6f6;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+input[type="text"]::placeholder,
+input[type="url"]::placeholder,
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+label {
+  color: #d0d0d0;
+  font-size: 13px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
