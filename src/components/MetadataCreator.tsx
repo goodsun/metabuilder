@@ -347,7 +347,7 @@ const MetadataCreator: React.FC = () => {
               maxWidth: "100px",
               maxHeight: "100px",
               borderRadius: "4px",
-              border: "1px solid #ddd",
+              border: "1px solid rgba(255, 255, 255, 0.12)",
             }}
             onError={(e) => {
               e.currentTarget.style.display = "none";
@@ -368,9 +368,9 @@ const MetadataCreator: React.FC = () => {
             style={{
               width: "100%",
               height: "100%",
-              backgroundColor: "#f0f0f0",
+              backgroundColor: "#111318",
               borderRadius: "4px",
-              border: "1px solid #ddd",
+              border: "1px solid rgba(255, 255, 255, 0.12)",
             }}
           />
         </div>
@@ -508,9 +508,9 @@ const MetadataCreator: React.FC = () => {
             marginBottom: "10px",
             alignItems: "center",
             padding: "10px",
-            border: "1px solid #e1e1e1",
+            border: "1px solid rgba(255, 255, 255, 0.12)",
             borderRadius: "8px",
-            backgroundColor: editingIndex === index ? "#f8f9fa" : "white",
+            backgroundColor: editingIndex === index ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0.03)",
           }}
         >
           {editingIndex === index ? (
@@ -543,7 +543,7 @@ const MetadataCreator: React.FC = () => {
                 type="button"
                 onClick={saveEditing}
                 className="btn"
-                style={{ backgroundColor: "#28a745", color: "white" }}
+                style={{ backgroundColor: "rgba(0, 255, 100, 0.1)", color: "#66ff99", borderColor: "rgba(0, 255, 100, 0.3)" }}
               >
                 保存
               </button>
@@ -601,8 +601,9 @@ const MetadataCreator: React.FC = () => {
                   style={{
                     fontSize: "12px",
                     padding: "5px 10px",
-                    backgroundColor: "#17a2b8",
-                    color: "white",
+                    backgroundColor: "rgba(100, 180, 255, 0.1)",
+                    color: "#6bb6ff",
+                    borderColor: "rgba(100, 180, 255, 0.3)",
                   }}
                 >
                   編集
@@ -614,8 +615,9 @@ const MetadataCreator: React.FC = () => {
                   style={{
                     fontSize: "12px",
                     padding: "5px 10px",
-                    backgroundColor: "#dc3545",
-                    color: "white",
+                    backgroundColor: "rgba(255, 0, 0, 0.1)",
+                    color: "#ff6666",
+                    borderColor: "rgba(255, 0, 0, 0.3)",
                   }}
                 >
                   削除
@@ -648,7 +650,7 @@ const MetadataCreator: React.FC = () => {
             }
           }} 
           className="btn" 
-          style={{ backgroundColor: "#dc3545", marginLeft: "10px" }}
+          style={{ backgroundColor: "rgba(255, 0, 0, 0.1)", color: "#ff6666", borderColor: "rgba(255, 0, 0, 0.3)", marginLeft: "10px" }}
         >
           データをクリア
         </button>
@@ -661,8 +663,9 @@ const MetadataCreator: React.FC = () => {
           style={{
             textAlign: "center",
             padding: "20px",
-            backgroundColor: "#f8f9fa",
+            backgroundColor: "rgba(255, 255, 255, 0.03)",
             borderRadius: "8px",
+            border: "1px solid rgba(255, 255, 255, 0.06)",
           }}
         >
           {metadata.image && (
@@ -701,7 +704,7 @@ const MetadataCreator: React.FC = () => {
               fontSize: "18px",
               fontWeight: "bold",
               marginBottom: "8px",
-              color: "#333",
+              color: "#f6f6f6",
             }}
           >
             {metadata.name || "Untitled NFT"}
@@ -710,7 +713,7 @@ const MetadataCreator: React.FC = () => {
           <div
             className="nft-description"
             style={{
-              color: "#666",
+              color: "#d0d0d0",
               marginBottom: "15px",
               fontSize: "14px",
               lineHeight: "1.4",
@@ -725,7 +728,7 @@ const MetadataCreator: React.FC = () => {
                 style={{
                   marginBottom: "10px",
                   fontSize: "14px",
-                  color: "#333",
+                  color: "#f6f6f6",
                 }}
               >
                 Attributes
@@ -745,11 +748,11 @@ const MetadataCreator: React.FC = () => {
                     key={index}
                     className="attribute-card"
                     style={{
-                      background: "#fff",
+                      background: "rgba(255, 255, 255, 0.05)",
                       padding: "12px",
                       borderRadius: "8px",
                       textAlign: "center",
-                      border: "1px solid #e9ecef",
+                      border: "1px solid rgba(255, 255, 255, 0.1)",
                       fontSize: "14px",
                     }}
                   >
@@ -757,7 +760,7 @@ const MetadataCreator: React.FC = () => {
                       className="attribute-type"
                       style={{
                         fontSize: "12px",
-                        color: "#666",
+                        color: "rgba(255, 255, 255, 0.5)",
                         textTransform: "uppercase",
                         marginBottom: "6px",
                       }}
@@ -769,7 +772,7 @@ const MetadataCreator: React.FC = () => {
                       style={{
                         fontSize: "14px",
                         fontWeight: "bold",
-                        color: "#333",
+                        color: "#f6f6f6",
                         marginBottom: "6px",
                       }}
                     >

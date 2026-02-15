@@ -543,9 +543,9 @@ const ArDriveUploader: React.FC = () => {
                                   alert("URLをクリップボードにコピーしました");
                                 }}
                                 style={{
-                                  background: "#007bff",
-                                  color: "#f6f6f6",
-                                  border: "none",
+                                  background: "rgba(100, 180, 255, 0.1)",
+                                  color: "#6bb6ff",
+                                  border: "1px solid rgba(100, 180, 255, 0.3)",
                                   padding: "4px 8px",
                                   borderRadius: "4px",
                                   cursor: "pointer",

@@ -13,7 +13,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message, subMessage }) 
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: 'rgba(0, 0, 0, 0.55)',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -21,40 +21,42 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message, subMessage }) 
       zIndex: 9999,
     }}>
       <div style={{
-        backgroundColor: 'white',
+        backgroundColor: 'rgba(5, 6, 10, 0.98)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
         borderRadius: '12px',
         padding: '2rem',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.35)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: '1rem',
         minWidth: '300px',
+        backdropFilter: 'blur(8px)',
       }}>
         <div style={{
           width: '50px',
           height: '50px',
-          border: '4px solid #f3f3f3',
-          borderTop: '4px solid #3498db',
+          border: '4px solid rgba(255, 255, 255, 0.15)',
+          borderTop: '4px solid rgba(255, 255, 255, 0.7)',
           borderRadius: '50%',
           animation: 'spin 1s linear infinite',
         }} />
-        
+
         {message && (
           <div style={{
             fontSize: '1.1rem',
             fontWeight: '500',
-            color: '#333',
+            color: '#f6f6f6',
             textAlign: 'center',
           }}>
             {message}
           </div>
         )}
-        
+
         {subMessage && (
           <div style={{
             fontSize: '0.9rem',
-            color: '#666',
+            color: 'rgba(255, 255, 255, 0.5)',
             textAlign: 'center',
             maxWidth: '400px',
           }}>
@@ -62,7 +64,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message, subMessage }) 
           </div>
         )}
       </div>
-      
+
       <style>
         {`
           @keyframes spin {

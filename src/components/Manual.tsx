@@ -15,17 +15,18 @@ const Manual: React.FC = () => {
   return (
     <div
       className="container"
-      style={{ 
-        maxWidth: "900px", 
-        margin: "0 auto", 
-        padding: isMobile ? "1rem" : "2rem" 
+      style={{
+        maxWidth: "900px",
+        margin: "0 auto",
+        padding: isMobile ? "1rem" : "2rem"
       }}
     >
       <h1>ArDriveTools 使用マニュアル</h1>
 
       <div
         style={{
-          background: "#f8f9fa",
+          background: "rgba(255, 255, 255, 0.05)",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
           padding: "1.5rem",
           borderRadius: "8px",
           marginBottom: "2rem",
@@ -40,10 +41,11 @@ const Manual: React.FC = () => {
       <section style={{ marginBottom: "3rem" }}>
         <h2>1. ArDrive Uploader</h2>
 
-        <h3>🔑 ウォレットの準備</h3>
+        <h3>ウォレットの準備</h3>
         <div
           style={{
-            background: "#fff3cd",
+            background: "rgba(255, 200, 50, 0.08)",
+            border: "1px solid rgba(255, 200, 50, 0.2)",
             padding: "1rem",
             borderRadius: "6px",
             marginBottom: "1rem",
@@ -58,11 +60,12 @@ const Manual: React.FC = () => {
           </ul>
         </div>
 
-        <h4>🆕 ウォレットの作成・取得方法</h4>
+        <h4>ウォレットの作成・取得方法</h4>
 
         <div
           style={{
-            background: "#e7f3ff",
+            background: "rgba(100, 180, 255, 0.08)",
+            border: "1px solid rgba(100, 180, 255, 0.2)",
             padding: "1rem",
             borderRadius: "6px",
             marginBottom: "1rem",
@@ -75,7 +78,7 @@ const Manual: React.FC = () => {
                 href="https://app.ardrive.io/"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: "#007bff" }}
+                style={{ color: "#6bb6ff" }}
               >
                 ArDrive公式サイト
               </a>{" "}
@@ -89,16 +92,17 @@ const Manual: React.FC = () => {
             </li>
           </ol>
           <p>
-            <strong>⚠️ 重要：</strong>
+            <strong>重要：</strong>
             ダウンロードしたJSONファイルは安全な場所に保管してください。紛失すると復旧できません。
           </p>
         </div>
 
-        <h4>💳 TURBOクレジットの購入方法（推奨）</h4>
+        <h4>TURBOクレジットの購入方法（推奨）</h4>
 
         <div
           style={{
-            background: "#fff5f5",
+            background: "rgba(255, 80, 60, 0.08)",
+            border: "1px solid rgba(255, 80, 60, 0.2)",
             padding: "1rem",
             borderRadius: "6px",
             marginBottom: "1rem",
@@ -111,7 +115,7 @@ const Manual: React.FC = () => {
                 href="https://app.ardrive.io/"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: "#007bff" }}
+                style={{ color: "#6bb6ff" }}
               >
                 ArDriveアプリ
               </a>
@@ -125,7 +129,7 @@ const Manual: React.FC = () => {
             <li>購入完了後、TURBOクレジットがウォレットに追加されます</li>
           </ol>
 
-          <h5>💡 TURBOの特徴：</h5>
+          <h5>TURBOの特徴：</h5>
           <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>
               <strong>簡単購入：</strong>クレジットカードで直接購入可能
@@ -143,7 +147,7 @@ const Manual: React.FC = () => {
             </li>
           </ul>
 
-          <h5>📊 料金目安：</h5>
+          <h5>料金目安：</h5>
           <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>
               <strong>写真（1-5MB）：</strong>約$0.01-0.05
@@ -160,16 +164,17 @@ const Manual: React.FC = () => {
           </ul>
 
           <p>
-            <strong>💡 ヒント：</strong>
+            <strong>ヒント：</strong>
             初回は$5-10程度の購入で十分です。使い切ったら追加購入できます。
           </p>
         </div>
 
-        <h4>📥 ウォレットファイルの取得方法</h4>
+        <h4>ウォレットファイルの取得方法</h4>
 
         <div
           style={{
-            background: "#f8f9fa",
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
             padding: "1rem",
             borderRadius: "6px",
             marginBottom: "1rem",
@@ -200,13 +205,14 @@ const Manual: React.FC = () => {
 
         <div
           style={{
-            background: "#d4edda",
+            background: "rgba(0, 255, 100, 0.08)",
+            border: "1px solid rgba(0, 255, 100, 0.2)",
             padding: "1rem",
             borderRadius: "6px",
             marginBottom: "1rem",
           }}
         >
-          <h5>🔐 セキュリティ上の注意：</h5>
+          <h5>セキュリティ上の注意：</h5>
           <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>ウォレットファイルは絶対に他人と共有しないでください</li>
             <li>複数の安全な場所にバックアップを保存してください</li>
@@ -215,7 +221,7 @@ const Manual: React.FC = () => {
           </ul>
         </div>
 
-        <h3>📁 ファイルアップロード手順</h3>
+        <h3>ファイルアップロード手順</h3>
         <ol style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>ウォレット読み込み：</strong>
@@ -234,7 +240,7 @@ const Manual: React.FC = () => {
           </li>
         </ol>
 
-        <h3>📋 アップロード済みファイル管理</h3>
+        <h3>アップロード済みファイル管理</h3>
         <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>履歴表示：</strong>
@@ -256,13 +262,14 @@ const Manual: React.FC = () => {
 
         <div
           style={{
-            background: "#d1ecf1",
+            background: "rgba(100, 180, 255, 0.06)",
+            border: "1px solid rgba(100, 180, 255, 0.15)",
             padding: "1rem",
             borderRadius: "6px",
             marginBottom: "1rem",
           }}
         >
-          <strong>💡 重要な注意事項：</strong>
+          <strong>重要な注意事項：</strong>
           <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>
               Arweaveにアップロードされたファイルは<strong>永続的</strong>
@@ -277,7 +284,7 @@ const Manual: React.FC = () => {
       <section style={{ marginBottom: "3rem" }}>
         <h2>2. NFTメタデータ作成</h2>
 
-        <h3>📝 基本情報入力</h3>
+        <h3>基本情報入力</h3>
         <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>名前：</strong>NFTの名前（必須）
@@ -299,7 +306,7 @@ const Manual: React.FC = () => {
           </li>
         </ul>
 
-        <h3>🏷️ 属性（Attributes）管理</h3>
+        <h3>属性（Attributes）管理</h3>
         <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>追加：</strong>特性名と値を入力して「追加」ボタン
@@ -319,7 +326,7 @@ const Manual: React.FC = () => {
           </li>
         </ul>
 
-        <h3>🖼️ プレビュー機能</h3>
+        <h3>プレビュー機能</h3>
         <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>リアルタイムプレビュー：</strong>
@@ -334,7 +341,7 @@ const Manual: React.FC = () => {
           </li>
         </ul>
 
-        <h3>💾 データ管理</h3>
+        <h3>データ管理</h3>
         <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>JSONコピー：</strong>
@@ -356,7 +363,8 @@ const Manual: React.FC = () => {
 
         <div
           style={{
-            background: "#f8f9fa",
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
             padding: "1.5rem",
             borderRadius: "8px",
             marginBottom: "2rem",
@@ -367,7 +375,7 @@ const Manual: React.FC = () => {
           </p>
         </div>
 
-        <h3>📷 画像選択</h3>
+        <h3>画像選択</h3>
         <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>ドラッグ&ドロップ：</strong>
@@ -382,7 +390,7 @@ const Manual: React.FC = () => {
           </li>
         </ul>
 
-        <h3>⚙️ リサイズ設定</h3>
+        <h3>リサイズ設定</h3>
         <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>アスペクト比を維持：</strong>
@@ -406,7 +414,7 @@ const Manual: React.FC = () => {
           </li>
         </ul>
 
-        <h3>🖼️ プレビュー・出力</h3>
+        <h3>プレビュー・出力</h3>
         <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
           <li>
             <strong>リアルタイムプレビュー：</strong>
@@ -424,13 +432,14 @@ const Manual: React.FC = () => {
 
         <div
           style={{
-            background: "#fff3cd",
+            background: "rgba(255, 200, 50, 0.08)",
+            border: "1px solid rgba(255, 200, 50, 0.2)",
             padding: "1rem",
             borderRadius: "6px",
             marginBottom: "1rem",
           }}
         >
-          <strong>💡 使用例：</strong>
+          <strong>使用例：</strong>
           <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>NFT作成前の画像最適化</li>
             <li>大きな画像ファイルの軽量化</li>
@@ -441,13 +450,14 @@ const Manual: React.FC = () => {
 
         <div
           style={{
-            background: "#d4edda",
+            background: "rgba(0, 255, 100, 0.08)",
+            border: "1px solid rgba(0, 255, 100, 0.2)",
             padding: "1rem",
             borderRadius: "6px",
             marginBottom: "1rem",
           }}
         >
-          <strong>🔧 技術仕様：</strong>
+          <strong>技術仕様：</strong>
           <ul style={{ paddingLeft: "1.5rem", margin: "0.5rem 0" }}>
             <li>Canvas APIによる高品質リサイズ</li>
             <li>ブラウザ内処理（サーバーにアップロードなし）</li>
@@ -468,13 +478,13 @@ const Manual: React.FC = () => {
         >
           <div
             style={{
-              background: "#fff",
+              background: "rgba(255, 255, 255, 0.05)",
               padding: "1rem",
               borderRadius: "6px",
-              border: "1px solid #ddd",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
             }}
           >
-            <h4>📷 画像</h4>
+            <h4>画像</h4>
             <ul
               style={{
                 fontSize: "0.9rem",
@@ -491,13 +501,13 @@ const Manual: React.FC = () => {
 
           <div
             style={{
-              background: "#fff",
+              background: "rgba(255, 255, 255, 0.05)",
               padding: "1rem",
               borderRadius: "6px",
-              border: "1px solid #ddd",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
             }}
           >
-            <h4>🎬 動画</h4>
+            <h4>動画</h4>
             <ul
               style={{
                 fontSize: "0.9rem",
@@ -512,13 +522,13 @@ const Manual: React.FC = () => {
 
           <div
             style={{
-              background: "#fff",
+              background: "rgba(255, 255, 255, 0.05)",
               padding: "1rem",
               borderRadius: "6px",
-              border: "1px solid #ddd",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
             }}
           >
-            <h4>🎵 音声</h4>
+            <h4>音声</h4>
             <ul
               style={{
                 fontSize: "0.9rem",
@@ -533,13 +543,13 @@ const Manual: React.FC = () => {
 
           <div
             style={{
-              background: "#fff",
+              background: "rgba(255, 255, 255, 0.05)",
               padding: "1rem",
               borderRadius: "6px",
-              border: "1px solid #ddd",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
             }}
           >
-            <h4>🎯 3Dモデル</h4>
+            <h4>3Dモデル</h4>
             <ul
               style={{
                 fontSize: "0.9rem",
@@ -554,13 +564,13 @@ const Manual: React.FC = () => {
 
           <div
             style={{
-              background: "#fff",
+              background: "rgba(255, 255, 255, 0.05)",
               padding: "1rem",
               borderRadius: "6px",
-              border: "1px solid #ddd",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
             }}
           >
-            <h4>📄 文書</h4>
+            <h4>文書</h4>
             <ul
               style={{
                 fontSize: "0.9rem",

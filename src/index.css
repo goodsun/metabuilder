@@ -28,7 +28,9 @@ a {
 
 h1, h2, h3 {
   color: #f6f6f6;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
   font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
 /* ── Container ── */

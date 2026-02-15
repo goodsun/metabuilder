@@ -123,7 +123,7 @@ const ImageResizer: React.FC = () => {
       if (!ctx) throw new Error("Canvas context not available");
 
       const { width, height } = calculateDimensions(resizeOptions.width, resizeOptions.height);
-      
+
       canvas.width = width;
       canvas.height = height;
 
@@ -162,30 +162,31 @@ const ImageResizer: React.FC = () => {
               <title>${finalFileName}</title>
               <meta name="viewport" content="width=device-width, initial-scale=1">
               <style>
-                body { 
-                  margin: 0; 
-                  padding: 20px; 
-                  text-align: center; 
+                body {
+                  margin: 0;
+                  padding: 20px;
+                  text-align: center;
                   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-                  background: #f5f5f5;
+                  background: #111318;
+                  color: #f6f6f6;
                 }
-                img { 
-                  max-width: 100%; 
-                  height: auto; 
+                img {
+                  max-width: 100%;
+                  height: auto;
                   border-radius: 8px;
-                  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                  box-shadow: 0 18px 60px rgba(0,0,0,0.28);
                 }
                 .download-instruction {
-                  background: white;
+                  background: rgba(255, 255, 255, 0.05);
+                  border: 1px solid rgba(255, 255, 255, 0.1);
                   padding: 15px;
                   border-radius: 8px;
                   margin: 20px 0;
-                  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 }
                 .step {
                   margin: 10px 0;
                   padding: 10px;
-                  background: #e3f2fd;
+                  background: rgba(100, 180, 255, 0.08);
                   border-radius: 6px;
                   font-size: 14px;
                 }
@@ -195,7 +196,7 @@ const ImageResizer: React.FC = () => {
               <h2>${finalFileName}</h2>
               <img src="${resizedImageUrl}" alt="${finalFileName}" />
               <div class="download-instruction">
-                <h3>📱 iPhoneで画像を保存する方法</h3>
+                <h3>iPhoneで画像を保存する方法</h3>
                 <div class="step">1. 上の画像を長押しします</div>
                 <div class="step">2. 「"写真"に保存」をタップします</div>
                 <div class="step">3. 写真アプリに保存されます</div>
@@ -226,28 +227,28 @@ const ImageResizer: React.FC = () => {
 
   const getEstimatedSize = useCallback(() => {
     if (!resizedImageUrl) return 0;
-    
+
     const base64Length = resizedImageUrl.split(",")[1]?.length || 0;
     return Math.round(base64Length * 0.75);
   }, [resizedImageUrl]);
 
   return (
-    <div style={{ 
-      maxWidth: "1200px", 
-      margin: "0 auto", 
-      padding: isMobile ? "1rem" : "2rem" 
+    <div style={{
+      maxWidth: "1200px",
+      margin: "0 auto",
+      padding: isMobile ? "1rem" : "2rem"
     }}>
       <h1 style={{ fontSize: isMobile ? "1.5rem" : "2rem" }}>画像リサイズツール</h1>
-      
+
       <div style={{ marginBottom: "2rem" }}>
         <div
           style={{
-            border: "2px dashed #ddd",
+            border: "2px dashed rgba(255, 255, 255, 0.2)",
             borderRadius: "8px",
             padding: isMobile ? "1rem" : "2rem",
             textAlign: "center",
             cursor: "pointer",
-            backgroundColor: selectedFile ? "#f8f9fa" : "white",
+            backgroundColor: selectedFile ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.02)",
           }}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
@@ -260,7 +261,7 @@ const ImageResizer: React.FC = () => {
             style={{ display: "none" }}
             onChange={handleFileInputChange}
           />
-          
+
           {selectedFile ? (
             <div>
               <h3>選択された画像</h3>
@@ -273,7 +274,7 @@ const ImageResizer: React.FC = () => {
           ) : (
             <div>
               <p>画像をドラッグ&ドロップするか、クリックして選択してください</p>
-              <p style={{ fontSize: "0.9rem", color: "#666" }}>
+              <p style={{ fontSize: "0.9rem", color: "rgba(255, 255, 255, 0.5)" }}>
                 対応形式: JPEG, PNG, WebP, GIF
               </p>
             </div>
@@ -282,11 +283,11 @@ const ImageResizer: React.FC = () => {
       </div>
 
       {selectedFile && originalImage && (
-        <div style={{ 
-          display: "grid", 
-          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", 
-          gap: "2rem", 
-          marginBottom: "2rem" 
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+          gap: "2rem",
+          marginBottom: "2rem"
         }}>
           <div>
             <h3>リサイズ設定</h3>
@@ -319,7 +320,7 @@ const ImageResizer: React.FC = () => {
                         setResizeOptions(prev => ({ ...prev, width }));
                       }
                     }}
-                    style={{ width: "100%", padding: "0.5rem", border: "1px solid #ddd", borderRadius: "4px" }}
+                    style={{ width: "100%", padding: "0.5rem", background: "rgba(255, 255, 255, 0.05)", border: "1px solid rgba(255, 255, 255, 0.15)", borderRadius: "4px", color: "#f6f6f6" }}
                   />
                 </div>
                 <div>
@@ -337,7 +338,7 @@ const ImageResizer: React.FC = () => {
                         setResizeOptions(prev => ({ ...prev, height }));
                       }
                     }}
-                    style={{ width: "100%", padding: "0.5rem", border: "1px solid #ddd", borderRadius: "4px" }}
+                    style={{ width: "100%", padding: "0.5rem", background: "rgba(255, 255, 255, 0.05)", border: "1px solid rgba(255, 255, 255, 0.15)", borderRadius: "4px", color: "#f6f6f6" }}
                   />
                 </div>
               </div>
@@ -347,11 +348,11 @@ const ImageResizer: React.FC = () => {
                 <select
                   value={resizeOptions.format}
                   onChange={(e) => setResizeOptions(prev => ({ ...prev, format: e.target.value as "jpeg" | "png" | "webp" }))}
-                  style={{ width: "100%", padding: "0.5rem", border: "1px solid #ddd", borderRadius: "4px" }}
+                  style={{ width: "100%", padding: "0.5rem", background: "rgba(255, 255, 255, 0.05)", border: "1px solid rgba(255, 255, 255, 0.15)", borderRadius: "4px", color: "#f6f6f6" }}
                 >
-                  <option value="jpeg">JPEG</option>
-                  <option value="png">PNG</option>
-                  <option value="webp">WebP</option>
+                  <option value="jpeg" style={{ background: "#1c1e22" }}>JPEG</option>
+                  <option value="png" style={{ background: "#1c1e22" }}>PNG</option>
+                  <option value="webp" style={{ background: "#1c1e22" }}>WebP</option>
                 </select>
               </div>
 
@@ -377,12 +378,14 @@ const ImageResizer: React.FC = () => {
                 disabled={isProcessing}
                 style={{
                   padding: "0.75rem",
-                  backgroundColor: isProcessing ? "#6c757d" : "#007bff",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
+                  backgroundColor: isProcessing ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.08)",
+                  color: isProcessing ? "rgba(255, 255, 255, 0.4)" : "#f6f6f6",
+                  border: isProcessing ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(255, 255, 255, 0.3)",
+                  borderRadius: "6px",
                   cursor: isProcessing ? "not-allowed" : "pointer",
                   fontSize: "1rem",
+                  letterSpacing: "0.05em",
+                  transition: "all 0.2s ease",
                 }}
               >
                 {isProcessing ? "処理中..." : "リサイズ実行"}
@@ -392,7 +395,7 @@ const ImageResizer: React.FC = () => {
 
           <div>
             <h3>プレビュー</h3>
-            <div style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "1rem", backgroundColor: "#f8f9fa" }}>
+            <div style={{ border: "1px solid rgba(255, 255, 255, 0.1)", borderRadius: "8px", padding: "1rem", backgroundColor: "rgba(255, 255, 255, 0.03)" }}>
               {resizedImageUrl ? (
                 <div>
                   <img
@@ -402,82 +405,84 @@ const ImageResizer: React.FC = () => {
                       maxWidth: "100%",
                       maxHeight: "300px",
                       objectFit: "contain",
-                      border: "1px solid #ddd",
+                      border: "1px solid rgba(255, 255, 255, 0.1)",
                       borderRadius: "4px",
                     }}
                   />
-                  <div style={{ marginTop: "1rem", fontSize: "0.9rem", color: "#666" }}>
+                  <div style={{ marginTop: "1rem", fontSize: "0.9rem", color: "#d0d0d0" }}>
                     <p><strong>推定ファイルサイズ:</strong> {formatFileSize(getEstimatedSize())}</p>
                     <button
                       onClick={handleDownload}
                       style={{
                         padding: "0.5rem 1rem",
-                        backgroundColor: "#28a745",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "4px",
+                        backgroundColor: "rgba(0, 255, 100, 0.1)",
+                        color: "#66ff99",
+                        border: "1px solid rgba(0, 255, 100, 0.3)",
+                        borderRadius: "6px",
                         cursor: "pointer",
                         marginTop: "0.5rem",
                         width: isMobile ? "100%" : "auto",
+                        letterSpacing: "0.05em",
+                        transition: "all 0.2s ease",
                       }}
                     >
                       {isIOS() ? "写真に保存" : "ダウンロード"}
                     </button>
                     {isIOS() && (
-                      <div style={{ 
+                      <div style={{
                         marginTop: "1rem",
                         padding: "1rem",
-                        backgroundColor: "#e3f2fd",
+                        backgroundColor: "rgba(100, 180, 255, 0.08)",
                         borderRadius: "8px",
-                        border: "1px solid #bbdefb"
+                        border: "1px solid rgba(100, 180, 255, 0.2)"
                       }}>
-                        <h4 style={{ 
-                          margin: "0 0 0.5rem 0", 
-                          fontSize: "0.9rem", 
-                          color: "#1976d2" 
+                        <h4 style={{
+                          margin: "0 0 0.5rem 0",
+                          fontSize: "0.9rem",
+                          color: "#6bb6ff"
                         }}>
-                          📱 iPhoneで写真に保存する手順
+                          iPhoneで写真に保存する手順
                         </h4>
-                        <div style={{ fontSize: "0.8rem", color: "#333" }}>
-                          <div style={{ 
-                            margin: "0.5rem 0", 
-                            padding: "0.5rem", 
-                            backgroundColor: "white", 
-                            borderRadius: "4px" 
+                        <div style={{ fontSize: "0.8rem", color: "#d0d0d0" }}>
+                          <div style={{
+                            margin: "0.5rem 0",
+                            padding: "0.5rem",
+                            backgroundColor: "rgba(255, 255, 255, 0.05)",
+                            borderRadius: "4px"
                           }}>
                             <strong>1.</strong> 上の「写真に保存」ボタンをタップ
                           </div>
-                          <div style={{ 
-                            margin: "0.5rem 0", 
-                            padding: "0.5rem", 
-                            backgroundColor: "white", 
-                            borderRadius: "4px" 
+                          <div style={{
+                            margin: "0.5rem 0",
+                            padding: "0.5rem",
+                            backgroundColor: "rgba(255, 255, 255, 0.05)",
+                            borderRadius: "4px"
                           }}>
                             <strong>2.</strong> 新しいタブで画像が表示されます
                           </div>
-                          <div style={{ 
-                            margin: "0.5rem 0", 
-                            padding: "0.5rem", 
-                            backgroundColor: "white", 
-                            borderRadius: "4px" 
+                          <div style={{
+                            margin: "0.5rem 0",
+                            padding: "0.5rem",
+                            backgroundColor: "rgba(255, 255, 255, 0.05)",
+                            borderRadius: "4px"
                           }}>
                             <strong>3.</strong> 画像を長押しします
                           </div>
-                          <div style={{ 
-                            margin: "0.5rem 0", 
-                            padding: "0.5rem", 
-                            backgroundColor: "white", 
-                            borderRadius: "4px" 
+                          <div style={{
+                            margin: "0.5rem 0",
+                            padding: "0.5rem",
+                            backgroundColor: "rgba(255, 255, 255, 0.05)",
+                            borderRadius: "4px"
                           }}>
                             <strong>4.</strong> 「"写真"に保存」をタップ
                           </div>
-                          <div style={{ 
-                            margin: "0.5rem 0", 
-                            padding: "0.5rem", 
-                            backgroundColor: "#c8e6c9", 
-                            borderRadius: "4px" 
+                          <div style={{
+                            margin: "0.5rem 0",
+                            padding: "0.5rem",
+                            backgroundColor: "rgba(0, 255, 100, 0.08)",
+                            borderRadius: "4px"
                           }}>
-                            <strong>✅</strong> 写真アプリに保存完了！
+                            <strong>OK</strong> 写真アプリに保存完了！
                           </div>
                         </div>
                       </div>
@@ -485,7 +490,7 @@ const ImageResizer: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div style={{ textAlign: "center", color: "#666", padding: "2rem" }}>
+                <div style={{ textAlign: "center", color: "rgba(255, 255, 255, 0.5)", padding: "2rem" }}>
                   リサイズを実行すると、ここにプレビューが表示されます
                 </div>
               )}

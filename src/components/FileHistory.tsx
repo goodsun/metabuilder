@@ -39,7 +39,7 @@ const FileHistory: React.FC = () => {
 
   useEffect(() => {
     loadFilesFromStorage();
-    
+
     // localStorageの変更を監視
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'uploadedFiles') {
@@ -47,9 +47,9 @@ const FileHistory: React.FC = () => {
         loadFilesFromStorage();
       }
     };
-    
+
     window.addEventListener('storage', handleStorageChange);
-    
+
     // 同じウィンドウ内での変更も監視するために、定期的にチェック
     // 前回の値と比較して変更があった場合のみ更新
     let lastStorageValue = localStorage.getItem("uploadedFiles");
@@ -60,7 +60,7 @@ const FileHistory: React.FC = () => {
         loadFilesFromStorage();
       }
     }, 2000); // 2秒ごとにチェック
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       clearInterval(intervalId);
@@ -85,7 +85,7 @@ const FileHistory: React.FC = () => {
           ...file,
           uploadDate: new Date(file.uploadDate),
         }));
-        
+
         // 前回と同じデータの場合は更新しない（不要な再レンダリングを防ぐ）
         setUploadedFiles((prevFiles) => {
           if (JSON.stringify(prevFiles) === JSON.stringify(filesWithDates)) {
@@ -155,18 +155,18 @@ const FileHistory: React.FC = () => {
   });
 
   const getFileIcon = (type: string) => {
-    if (type.startsWith("image/")) return "🖼️";
-    if (type.startsWith("video/")) return "🎬";
-    if (type.startsWith("audio/")) return "🎵";
-    if (type.includes("pdf")) return "📄";
-    if (type.includes("json")) return "📊";
+    if (type.startsWith("image/")) return "IMG";
+    if (type.startsWith("video/")) return "VID";
+    if (type.startsWith("audio/")) return "AUD";
+    if (type.includes("pdf")) return "PDF";
+    if (type.includes("json")) return "JSON";
     if (
       type.includes("model/") ||
       type.includes("gltf") ||
       type.includes("glb")
     )
-      return "🎯";
-    return "📁";
+      return "3D";
+    return "FILE";
   };
 
   const isImageFile = (type: string) => {
@@ -224,7 +224,7 @@ const FileHistory: React.FC = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "#f8f9fa",
+            backgroundColor: "rgba(255, 255, 255, 0.05)",
             borderRadius: "8px",
             overflow: "hidden",
             marginRight: "0.5rem",
@@ -243,7 +243,7 @@ const FileHistory: React.FC = () => {
             onError={(e) => {
               e.currentTarget.style.display = "none";
               e.currentTarget.parentElement!.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: center; color: #666; font-size: 1.5rem;">
+                <div style="display: flex; align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.5); font-size: 0.75rem; letter-spacing: 0.1em;">
                   ${getFileIcon(file.type)}
                 </div>
               `;
@@ -296,15 +296,17 @@ const FileHistory: React.FC = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#f8f9fa",
+          backgroundColor: "rgba(255, 255, 255, 0.05)",
           borderRadius: "8px",
           marginRight: "0.5rem",
           flexShrink: 0,
-          fontSize: "2rem",
+          fontSize: "0.75rem",
+          color: "rgba(255, 255, 255, 0.5)",
+          letterSpacing: "0.1em",
         }}
       >
         {isLoadingJson && file.type === "application/json" ? (
-          <div style={{ color: "#666", fontSize: "0.8rem" }}>Loading...</div>
+          <div style={{ color: "rgba(255, 255, 255, 0.4)", fontSize: "0.8rem" }}>Loading...</div>
         ) : (
           getFileIcon(file.type)
         )}
@@ -313,17 +315,18 @@ const FileHistory: React.FC = () => {
   };
 
   return (
-    <div style={{ 
-      maxWidth: "1200px", 
-      margin: "0 auto", 
-      padding: isMobile ? "1rem" : "2rem" 
+    <div style={{
+      maxWidth: "1200px",
+      margin: "0 auto",
+      padding: isMobile ? "1rem" : "2rem"
     }}>
       <h1 style={{ fontSize: isMobile ? "1.5rem" : "2rem" }}>Material Vault</h1>
       <div
         style={{
           marginBottom: "2rem",
           padding: "1rem",
-          backgroundColor: "#f8f9fa",
+          backgroundColor: "rgba(255, 255, 255, 0.05)",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
           borderRadius: "8px",
           display: "flex",
           flexDirection: isMobile ? "column" : "row",
@@ -341,8 +344,10 @@ const FileHistory: React.FC = () => {
             style={{
               width: "100%",
               padding: "0.5rem",
-              border: "1px solid #ddd",
+              background: "rgba(255, 255, 255, 0.05)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
               borderRadius: "4px",
+              color: "#f6f6f6",
             }}
           />
         </div>
@@ -355,24 +360,28 @@ const FileHistory: React.FC = () => {
             }
             style={{
               padding: "0.5rem",
-              border: "1px solid #ddd",
+              background: "rgba(255, 255, 255, 0.05)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
               borderRadius: "4px",
+              color: "#f6f6f6",
             }}
           >
-            <option value="date">日付順</option>
-            <option value="name">名前順</option>
-            <option value="size">サイズ順</option>
+            <option value="date" style={{ background: "#1c1e22" }}>日付順</option>
+            <option value="name" style={{ background: "#1c1e22" }}>名前順</option>
+            <option value="size" style={{ background: "#1c1e22" }}>サイズ順</option>
           </select>
 
           <button
             onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
             style={{
               padding: "0.5rem 1rem",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
+              backgroundColor: "rgba(255, 255, 255, 0.08)",
+              color: "#f6f6f6",
+              border: "1px solid rgba(255, 255, 255, 0.3)",
+              borderRadius: "6px",
               cursor: "pointer",
+              letterSpacing: "0.05em",
+              transition: "all 0.2s ease",
             }}
           >
             {sortOrder === "asc" ? "↑" : "↓"}
@@ -384,11 +393,13 @@ const FileHistory: React.FC = () => {
             onClick={handleClearHistory}
             style={{
               padding: "0.5rem 1rem",
-              backgroundColor: "#dc3545",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
+              backgroundColor: "rgba(255, 0, 0, 0.1)",
+              color: "#ff6666",
+              border: "1px solid rgba(255, 0, 0, 0.3)",
+              borderRadius: "6px",
               cursor: "pointer",
+              letterSpacing: "0.05em",
+              transition: "all 0.2s ease",
             }}
           >
             一括削除
@@ -396,7 +407,7 @@ const FileHistory: React.FC = () => {
         </div>
       </div>
 
-      <div style={{ marginBottom: "1rem", color: "#666" }}>
+      <div style={{ marginBottom: "1rem", color: "rgba(255, 255, 255, 0.5)" }}>
         {sortedFiles.length > 0
           ? `${sortedFiles.length}件のファイル${
               filteredFiles.length !== uploadedFiles.length
@@ -411,9 +422,10 @@ const FileHistory: React.FC = () => {
           style={{
             textAlign: "center",
             padding: "3rem",
-            backgroundColor: "#f8f9fa",
+            backgroundColor: "rgba(255, 255, 255, 0.03)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
             borderRadius: "8px",
-            color: "#666",
+            color: "rgba(255, 255, 255, 0.5)",
           }}
         >
           {searchTerm
@@ -431,11 +443,11 @@ const FileHistory: React.FC = () => {
             <div
               key={file.id}
               style={{
-                border: "1px solid #e9ecef",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
                 borderRadius: "8px",
                 padding: "1rem",
-                backgroundColor: "white",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                backgroundColor: "rgba(255, 255, 255, 0.03)",
+                boxShadow: "0 4px 16px rgba(0, 0, 0, 0.3)",
                 position: "relative",
               }}
             >
@@ -458,7 +470,7 @@ const FileHistory: React.FC = () => {
                   >
                     {file.name}
                   </h3>
-                  <div style={{ fontSize: "0.875rem", color: "#666" }}>
+                  <div style={{ fontSize: "0.875rem", color: "rgba(255, 255, 255, 0.5)" }}>
                     <b>size</b>: {formatFileSize(file.size)} <b>mime</b>:{" "}
                     {file.type} <b>date</b>: {formatDate(file.uploadDate)}
                   </div>
@@ -478,13 +490,15 @@ const FileHistory: React.FC = () => {
                         alert("URLをクリップボードにコピーしました");
                       }}
                       style={{
-                        backgroundColor: "#007bff",
-                        color: "white",
-                        border: "none",
+                        backgroundColor: "rgba(100, 180, 255, 0.1)",
+                        color: "#6bb6ff",
+                        border: "1px solid rgba(100, 180, 255, 0.3)",
                         padding: "0.25rem 0.5rem",
                         borderRadius: "4px",
                         cursor: "pointer",
                         fontSize: "0.75rem",
+                        letterSpacing: "0.05em",
+                        transition: "all 0.2s ease",
                       }}
                     >
                       URLコピー
@@ -494,12 +508,15 @@ const FileHistory: React.FC = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
-                        backgroundColor: "#28a745",
-                        color: "white",
+                        backgroundColor: "rgba(0, 255, 100, 0.1)",
+                        color: "#66ff99",
                         textDecoration: "none",
                         padding: "0.25rem 0.5rem",
                         borderRadius: "4px",
+                        border: "1px solid rgba(0, 255, 100, 0.3)",
                         fontSize: "0.75rem",
+                        letterSpacing: "0.05em",
+                        transition: "all 0.2s ease",
                       }}
                     >
                       開く
@@ -511,10 +528,11 @@ const FileHistory: React.FC = () => {
               <div
                 style={{
                   fontSize: "0.75rem",
-                  color: "#666",
+                  color: "rgba(255, 255, 255, 0.5)",
                   fontFamily: "monospace",
                   wordBreak: "break-all",
-                  backgroundColor: "#f8f9fa",
+                  backgroundColor: "rgba(255, 255, 255, 0.03)",
+                  border: "1px solid rgba(255, 255, 255, 0.06)",
                   padding: "0.5rem",
                   borderRadius: "4px",
                   marginTop: "0.75rem",
@@ -529,14 +547,15 @@ const FileHistory: React.FC = () => {
                   position: "absolute",
                   top: "8px",
                   right: "8px",
-                  backgroundColor: "#dc3545",
-                  color: "white",
-                  border: "none",
+                  backgroundColor: "rgba(255, 0, 0, 0.1)",
+                  color: "#ff6666",
+                  border: "1px solid rgba(255, 0, 0, 0.3)",
                   padding: "4px 8px",
                   borderRadius: "4px",
                   cursor: "pointer",
                   fontSize: "12px",
                   zIndex: 1,
+                  transition: "all 0.2s ease",
                 }}
               >
                 ×
