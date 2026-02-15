@@ -429,8 +429,7 @@ const ArDriveUploader: React.FC = () => {
                 marginTop: "1rem",
                 padding: "0.5rem 1rem",
                 backgroundColor: "rgba(255, 255, 255, 0.1)", border: "1px solid rgba(255, 255, 255, 0.3)",
-                color: "white",
-                border: "none",
+                color: "#f6f6f6",
                 borderRadius: "4px",
                 marginRight: "1rem",
               }}
@@ -453,8 +452,7 @@ const ArDriveUploader: React.FC = () => {
                 marginTop: "1rem",
                 padding: "0.5rem 1rem",
                 backgroundColor: "rgba(255, 80, 60, 0.15)", border: "1px solid rgba(255, 80, 60, 0.3)",
-                color: "white",
-                border: "none",
+                color: "#f6f6f6",
                 borderRadius: "4px",
               }}
             >
@@ -489,8 +487,7 @@ const ArDriveUploader: React.FC = () => {
                   style={{
                     padding: "0.25rem 0.5rem",
                     backgroundColor: "rgba(255, 255, 255, 0.08)", border: "1px solid rgba(255, 255, 255, 0.2)",
-                    color: "white",
-                    border: "none",
+                    color: "#f6f6f6",
                     borderRadius: "4px",
                     fontSize: "0.75rem",
                   }}
@@ -547,7 +544,7 @@ const ArDriveUploader: React.FC = () => {
                                 }}
                                 style={{
                                   background: "#007bff",
-                                  color: "white",
+                                  color: "#f6f6f6",
                                   border: "none",
                                   padding: "4px 8px",
                                   borderRadius: "4px",
@@ -580,8 +577,7 @@ const ArDriveUploader: React.FC = () => {
                           onClick={() => handleDeleteFile(file.id)}
                           style={{
                             backgroundColor: "rgba(255, 80, 60, 0.15)", border: "1px solid rgba(255, 80, 60, 0.3)",
-                            color: "white",
-                            border: "none",
+                            color: "#f6f6f6",
                             padding: "0.5rem 1rem",
                             borderRadius: "4px",
                             cursor: "pointer",
@@ -704,7 +700,7 @@ const ArDriveUploader: React.FC = () => {
             display: "inline-block",
             padding: "12px 24px",
             backgroundColor: "rgba(255, 255, 255, 0.1)", border: "1px solid rgba(255, 255, 255, 0.3)",
-            color: "white",
+            color: "#f6f6f6",
             textDecoration: "none",
             borderRadius: "6px",
             fontWeight: "bold",
